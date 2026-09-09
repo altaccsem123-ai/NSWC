@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Personnel Portal | NSWC</title>
+  <link rel="icon" type="image/png" href="../images/nsw_logo.png">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/auth.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="auth-body portal-shell">
+  <header class="auth-topbar">
+    <div class="container">
+      <div class="auth-brand">
+        <img src="../images/nsw_logo.png" alt="NSWC emblem">
+        <div>
+          <strong>NSWC PERSONNEL SYSTEM</strong>
+          <span>Authenticated Personnel Portal</span>
+        </div>
+      </div>
+      <button class="auth-action" id="logout-button" type="button">Sign Out</button>
+    </div>
+  </header>
+
+  <div class="portal-gate" id="portal-gate">Validating personnel session...</div>
+
+  <main class="portal-main" id="portal-app" hidden>
+    <div class="container">
+      <div class="portal-heading">
+        <div>
+          <h1>Personnel Record</h1>
+          <p>Authenticated account information supplied by the NSWC personnel database.</p>
+        </div>
+        <div class="portal-actions">
+          <a class="portal-link" href="../">Public Site</a>
+          <a class="portal-link" id="admin-link" href="../admin/" hidden>Administration</a>
+        </div>
+      </div>
+
+      <section class="profile-grid" aria-label="Personnel profile">
+        <div class="profile-field"><span>Name</span><strong id="profile-name">—</strong></div>
+        <div class="profile-field"><span>Callsign</span><strong id="profile-callsign">—</strong></div>
+        <div class="profile-field"><span>Email</span><strong id="profile-email">—</strong></div>
+        <div class="profile-field"><span>Branch</span><strong id="profile-branch">—</strong></div>
+        <div class="profile-field"><span>Rank</span><strong id="profile-rank">—</strong></div>
+        <div class="profile-field"><span>Billet</span><strong id="profile-billet">—</strong></div>
+        <div class="profile-field"><span>Team</span><strong id="profile-team">—</strong></div>
+        <div class="profile-field"><span>Unit Joined</span><strong id="profile-joined">—</strong></div>
+        <div class="profile-field"><span>Account Status</span><strong id="profile-status">—</strong></div>
+        <div class="profile-field"><span>Access Level</span><strong id="profile-access">—</strong></div>
+      </section>
+    </div>
+  </main>
+
+  <script type="module" src="../assets/js/portal.js"></script>
+</body>
+</html>
