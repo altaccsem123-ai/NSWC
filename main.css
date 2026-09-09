@@ -189,7 +189,7 @@ body > header .subhead {
   flex: 0 0 76px;
   width: 76px;
   height: 76px;
-  background: url("images/nsw_logo.png") center / contain no-repeat;
+  background: url("../../images/nsw_logo.png") center / contain no-repeat;
 }
 
 .nswg-header h1 {
@@ -290,7 +290,7 @@ body > header .subhead {
   background:
     linear-gradient(90deg, rgba(0,18,37,0.84) 0%, rgba(0,18,37,0.56) 43%, rgba(0,18,37,0.08) 78%),
     linear-gradient(0deg, rgba(0,18,37,0.58), rgba(0,18,37,0.02) 55%),
-    url("1.png") center 44% / cover no-repeat;
+    url("../../1.png") center 44% / cover no-repeat;
 }
 
 .nswg-hero > img {
@@ -631,10 +631,10 @@ body > header .subhead {
   transition: opacity 900ms ease, transform 6s ease;
 }
 
-.nswg-slideshow .slide:nth-child(1) { background-image: url("2.png") !important; }
-.nswg-slideshow .slide:nth-child(2) { background-image: url("3.png") !important; }
-.nswg-slideshow .slide:nth-child(3) { background-image: url("4.png") !important; }
-.nswg-slideshow .slide:nth-child(4) { background-image: url("6.png") !important; }
+.nswg-slideshow .slide:nth-child(1) { background-image: url("../../2.png") !important; }
+.nswg-slideshow .slide:nth-child(2) { background-image: url("../../3.png") !important; }
+.nswg-slideshow .slide:nth-child(3) { background-image: url("../../4.png") !important; }
+.nswg-slideshow .slide:nth-child(4) { background-image: url("../../6.png") !important; }
 
 .nswg-slideshow .slide.active {
   z-index: 2;

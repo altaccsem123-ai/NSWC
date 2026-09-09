@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>NSWC Personnel Portal</title>
+  <link rel="icon" type="image/png" href="../../images/nsw_logo.png">
+  <link rel="stylesheet" href="portal.css">
+</head>
+<body>
+  <div id="gate" class="gate">Validating personnel session...</div>
+
+  <div id="portal" hidden>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="../../">
+          <img src="../../images/nsw_logo.png" alt="NSWC emblem">
+          <div>
+            <strong>NAVAL SPECIAL WARFARE COMMAND</strong>
+            <span>Personnel Management System // 2012</span>
+          </div>
+        </a>
+        <div class="identity">
+          <div>
+            <strong id="identity-name">Personnel</strong>
+            <span id="identity-meta">Authenticated Session</span>
+          </div>
+          <button id="logout-button" type="button">Sign Out</button>
+        </div>
+      </div>
+    </header>
+
+    <nav class="tabs" aria-label="Portal sections">
+      <div class="tabs-inner">
+        <button class="tab active" data-tab="schedule" type="button">Scheduling</button>
+        <button class="tab" data-tab="qualifications" type="button">Qualifications</button>
+        <button class="tab" data-tab="attendance" type="button">Attendance</button>
+        <button class="tab" data-tab="personnel" id="personnel-tab-button" type="button" hidden>Personnel</button>
+      </div>
+    </nav>
+
+    <main class="shell">
+      <section class="panel active" id="tab-schedule">
+        <div class="page-head">
+          <div>
+            <p class="eyebrow">Training & Development</p>
+            <h1>Scheduling</h1>
+            <p class="subcopy">Times are entered in your current browser timezone and stored centrally in UTC. Every user sees the same session converted to their own local timezone.</p>
+          </div>
+          <button id="new-session-button" class="primary-button" type="button" hidden>Create Session</button>
+        </div>
+
+        <div class="schedule-toolbar">
+          <div class="segmented" id="schedule-filters">
+            <button type="button" class="active" data-filter="upcoming">Upcoming</button>
+            <button type="button" data-filter="completed">Completed</button>
+            <button type="button" data-filter="all">All</button>
+          </div>
+          <div class="timezone-badge">Your timezone: <strong id="timezone-label">Local</strong></div>
+        </div>
+
+        <div id="schedule-status" class="status-line">Loading sessions...</div>
+        <div id="session-list" class="session-list"></div>
+      </section>
+
+      <section class="panel" id="tab-qualifications">
+        <div class="page-head">
+          <div>
+            <p class="eyebrow">Personnel Standards</p>
+            <h1>Qualifications</h1>
+            <p class="subcopy">View unit qualification records. Authorized instructors and administrators can award and revoke qualifications.</p>
+          </div>
+        </div>
+
+        <div class="two-column">
+          <aside class="people-card">
+            <div class="card-head">
+              <strong>Personnel</strong>
+              <input id="qualification-person-search" type="search" placeholder="Search name or callsign">
+            </div>
+            <div id="qualification-people" class="people-list"></div>
+          </aside>
+
+          <div class="content-card">
+            <div id="qualification-empty" class="empty-state">Select a person to view qualifications.</div>
+            <div id="qualification-detail" hidden>
+              <div class="detail-head">
+                <div>
+                  <p class="eyebrow">Qualification Record</p>
+                  <h2 id="qualification-person-name">Personnel</h2>
+                  <p id="qualification-person-meta" class="subcopy"></p>
+                </div>
+                <button id="award-qualification-button" class="primary-button" type="button" hidden>Award Qualification</button>
+              </div>
+              <div id="member-qualifications" class="qualification-grid"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="tab-attendance">
+        <div class="page-head">
+          <div>
+            <p class="eyebrow">Readiness Tracking</p>
+            <h1>Attendance</h1>
+            <p class="subcopy">Attendance starts only from eligible mandatory sessions occurring on or after a member's unit join date. Pro Development does not change the mandatory attendance percentage.</p>
+          </div>
+        </div>
+
+        <div class="attendance-controls">
+          <div class="segmented" id="attendance-cohort">
+            <button type="button" class="active" data-cohort="full">Full Unit</button>
+            <button type="button" data-cohort="green">Green Team</button>
+          </div>
+          <select id="attendance-sort" aria-label="Sort attendance">
+            <option value="attendance_desc">Attendance: High to Low</option>
+            <option value="attendance_asc">Attendance: Low to High</option>
+            <option value="name">Name</option>
+            <option value="sessions_desc">Sessions Attended</option>
+          </select>
+        </div>
+
+        <div id="attendance-status" class="status-line">Loading attendance...</div>
+        <div class="table-wrap">
+          <table class="data-table" id="attendance-table">
+            <thead>
+              <tr>
+                <th>Member</th>
+                <th>Callsign</th>
+                <th>Joined</th>
+                <th>Eligible</th>
+                <th>Attended</th>
+                <th>Late</th>
+                <th>Absent</th>
+                <th>Attendance</th>
+                <th>Avg. Review</th>
+              </tr>
+            </thead>
+            <tbody id="attendance-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel" id="tab-personnel">
+        <div class="page-head">
+          <div>
+            <p class="eyebrow">Administration</p>
+            <h1>Personnel</h1>
+            <p class="subcopy">Create Green Team candidate accounts. Candidate addresses must end in @candidate.mil.</p>
+          </div>
+        </div>
+
+        <div class="admin-grid">
+          <div class="content-card">
+            <div class="detail-head">
+              <div>
+                <p class="eyebrow">Green Team</p>
+                <h2>Create Candidate Account</h2>
+              </div>
+            </div>
+            <form id="candidate-form" class="form-grid">
+              <label>
+                <span>Fictional First Name</span>
+                <input id="candidate-first" required maxlength="80">
+              </label>
+              <label>
+                <span>Fictional Last Name</span>
+                <input id="candidate-last" required maxlength="80">
+              </label>
+              <label>
+                <span>Email</span>
+                <input id="candidate-email" required type="email" placeholder="name@candidate.mil">
+              </label>
+              <label>
+                <span>Temporary Password</span>
+                <input id="candidate-password" required type="password" minlength="10" autocomplete="new-password">
+              </label>
+              <label>
+                <span>Callsign</span>
+                <input id="candidate-callsign" maxlength="30" placeholder="Optional">
+              </label>
+              <label>
+                <span>Timezone</span>
+                <input id="candidate-timezone" maxlength="80" placeholder="Optional, e.g. America/New_York">
+              </label>
+              <div class="form-full">
+                <button class="primary-button" type="submit">Create Candidate</button>
+                <p id="candidate-message" class="form-message"></p>
+              </div>
+            </form>
+          </div>
+
+          <div class="content-card">
+            <div class="detail-head">
+              <div>
+                <p class="eyebrow">Account Rules</p>
+                <h2>Candidate Access</h2>
+              </div>
+            </div>
+            <div class="policy-list">
+              <p><strong>Training visibility:</strong> Green Team sessions only.</p>
+              <p><strong>Session creation:</strong> Disabled.</p>
+              <p><strong>Attendance:</strong> Calculated from completed Green Team sessions after account creation.</p>
+              <p><strong>Promotion:</strong> Change the member's account out of candidate status and assign the proper branch/rank through your existing admin tooling or Supabase Table Editor.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="session-dialog" class="modal wide-modal">
+    <form method="dialog" class="modal-frame" id="session-form">
+      <div class="modal-head">
+        <div>
+          <p class="eyebrow">Session Control</p>
+          <h2 id="session-form-title">Create Session</h2>
+        </div>
+        <button class="icon-button" value="cancel" type="button" data-close-dialog="session-dialog">×</button>
+      </div>
+      <div class="modal-body form-grid">
+        <input id="session-id" type="hidden">
+        <label class="form-full">
+          <span>Title</span>
+          <input id="session-title" required maxlength="120">
+        </label>
+        <label>
+          <span>Session Type</span>
+          <select id="session-type" required>
+            <option value="Pro Development">Pro Development</option>
+            <option value="Official Training">Official Training</option>
+            <option value="Green Team">Green Team</option>
+          </select>
+        </label>
+        <label>
+          <span>Location</span>
+          <select id="session-location" required>
+            <option>Undecided</option>
+            <option>Dam Neck Annex</option>
+            <option>Mid-South Institute</option>
+            <option>Fort Johnson</option>
+          </select>
+        </label>
+        <label>
+          <span>Date & Time</span>
+          <input id="session-start" type="datetime-local" required>
+          <small id="session-time-hint">Entered in your local timezone.</small>
+        </label>
+        <label>
+          <span>Status</span>
+          <select id="session-status">
+            <option value="scheduled">Scheduled</option>
+            <option value="completed">Completed</option>
+            <option value="postponed">Postponed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </label>
+        <label class="form-full">
+          <span>Description</span>
+          <textarea id="session-description" rows="4" maxlength="3000"></textarea>
+        </label>
+        <label class="form-full">
+          <span>After Action Review</span>
+          <textarea id="session-aar" rows="5" maxlength="8000" placeholder="Available to instructors/administrators when managing a session."></textarea>
+        </label>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="danger-button" id="delete-session-button" hidden>Remove Session</button>
+        <div class="modal-actions-right">
+          <button type="button" class="secondary-button" data-close-dialog="session-dialog">Cancel</button>
+          <button type="submit" class="primary-button">Save Session</button>
+        </div>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="session-detail-dialog" class="modal wide-modal">
+    <div class="modal-frame">
+      <div class="modal-head">
+        <div>
+          <p class="eyebrow" id="detail-type">Session</p>
+          <h2 id="detail-title">Training</h2>
+        </div>
+        <button class="icon-button" type="button" data-close-dialog="session-detail-dialog">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="session-facts" id="detail-facts"></div>
+        <p id="detail-description" class="detail-description"></p>
+
+        <section class="response-block">
+          <div class="section-row">
+            <div>
+              <p class="eyebrow">Your Response</p>
+              <h3>Availability</h3>
+            </div>
+          </div>
+          <div class="response-buttons" id="response-buttons">
+            <button type="button" data-response="attending">Attending</button>
+            <button type="button" data-response="not_attending">Not Attending</button>
+            <button type="button" data-response="tentative">Tentative</button>
+          </div>
+          <div id="tentative-wrap" class="tentative-wrap" hidden>
+            <label>
+              <span>Tentative Reason</span>
+              <textarea id="tentative-reason" rows="2" maxlength="500" placeholder="Required when tentative"></textarea>
+            </label>
+            <button type="button" id="save-tentative" class="secondary-button">Save Reason</button>
+          </div>
+          <p id="response-message" class="form-message"></p>
+        </section>
+
+        <section class="roster-block">
+          <div class="section-row">
+            <div>
+              <p class="eyebrow">Session Roster</p>
+              <h3>Responses</h3>
+            </div>
+            <button id="manage-session-button" class="secondary-button" type="button" hidden>Manage Session</button>
+          </div>
+          <div id="response-roster" class="response-roster"></div>
+        </section>
+
+        <section id="attendance-marking-block" class="roster-block" hidden>
+          <div class="section-row">
+            <div>
+              <p class="eyebrow">Leadership</p>
+              <h3>Actual Attendance & Reviews</h3>
+            </div>
+          </div>
+          <div id="attendance-marking-list" class="attendance-marking-list"></div>
+        </section>
+
+        <section id="aar-block" class="aar-block" hidden>
+          <p class="eyebrow">After Action Review</p>
+          <div id="detail-aar" class="aar-copy"></div>
+        </section>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="qualification-dialog" class="modal">
+    <form method="dialog" class="modal-frame" id="qualification-form">
+      <div class="modal-head">
+        <div>
+          <p class="eyebrow">Qualification Control</p>
+          <h2>Award Qualification</h2>
+        </div>
+        <button class="icon-button" type="button" data-close-dialog="qualification-dialog">×</button>
+      </div>
+      <div class="modal-body form-grid">
+        <input id="qualification-target-id" type="hidden">
+        <label class="form-full">
+          <span>Qualification</span>
+          <select id="qualification-select" required></select>
+        </label>
+        <label>
+          <span>Awarded Date</span>
+          <input id="qualification-date" type="date" required>
+        </label>
+        <label>
+          <span>Expires</span>
+          <input id="qualification-expiry" type="date">
+        </label>
+        <label class="form-full">
+          <span>Notes</span>
+          <textarea id="qualification-notes" rows="3" maxlength="1000"></textarea>
+        </label>
+      </div>
+      <div class="modal-actions">
+        <span></span>
+        <div class="modal-actions-right">
+          <button type="button" class="secondary-button" data-close-dialog="qualification-dialog">Cancel</button>
+          <button type="submit" class="primary-button">Award</button>
+        </div>
+      </div>
+    </form>
+  </dialog>
+
+  <script type="module" src="portal.js"></script>
+</body>
+</html>
