@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Personnel Login | NSWC</title>
+  <link rel="icon" type="image/png" href="../images/nsw_logo.png">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/auth.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="auth-body">
+  <header class="auth-topbar">
+    <div class="container">
+      <div class="auth-brand">
+        <img src="../images/nsw_logo.png" alt="NSWC emblem">
+        <div>
+          <strong>NSWC PERSONNEL SYSTEM</strong>
+          <span>Naval Special Warfare Command • Fictional Arma 3 Environment</span>
+        </div>
+      </div>
+      <a class="auth-back" href="../">Return to Site</a>
+    </div>
+  </header>
+
+  <main class="auth-main">
+    <div class="container">
+      <section class="login-card" aria-labelledby="login-title">
+        <div class="login-card-head">
+          <p class="login-kicker">Controlled Personnel Access</p>
+          <h1 id="login-title">Sign in to NSWC</h1>
+          <p>Use the email address and password assigned to your NSWC account.</p>
+        </div>
+
+        <form class="login-form" id="login-form" autocomplete="on">
+          <p class="auth-message" id="login-message" hidden></p>
+
+          <div class="auth-field">
+            <label for="email">Email address</label>
+            <input id="email" name="email" type="email" autocomplete="username" required maxlength="254">
+          </div>
+
+          <div class="auth-field">
+            <label for="password">Password</label>
+            <div class="password-wrap">
+              <input id="password" name="password" type="password" autocomplete="current-password" required>
+              <button class="password-toggle" id="toggle-password" type="button" aria-pressed="false">Show</button>
+            </div>
+          </div>
+
+          <button class="login-submit" id="login-submit" type="submit">Sign In</button>
+
+          <p class="auth-notice">
+            Authorized NSWC personnel only. Accounts are provisioned by unit administration. This website represents a fictional Arma 3 milsim community and is not a United States Government information system.
+          </p>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <script type="module" src="../assets/js/login.js"></script>
+</body>
+</html>
