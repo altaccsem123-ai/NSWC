@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Naval Special Warfare Command</title>
+    <link rel="icon" type="image/x-icon" href="nsw_logo.png">
+  <link rel="stylesheet" href="apply.css" />
+  <link rel="stylesheet" href="../apply/apply.css">
+   <link rel="stylesheet" href="../main.css" />
+    <!-- Meta Description -->
+  <meta name="description" content="Begin your NSW candidate screening process through our official Naval Special Warfare simulation portal. Submit your identification, readiness, service history, and operational intent to initiate assignment consideration.">
+
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="Naval Special Warfare Command">
+  <meta property="og:description" content="Begin your NSW candidate screening process through our official Naval Special Warfare portal.">
+  <meta property="og:image" content="../images/nsw_logo.png">
+    <link rel="shortcut icon" href="images/nsw_logo.png" type="image/x-icon">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://nswscreening.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="session-timeout-overlay">
+  <div class="session-box">
+    <h2>⚠ SESSION TERMINATED</h2>
+    <p>Secure candidate interface timed out due to inactivity.</p>
+    <p class="countdown">Reloading in <span id="timeout-counter">3</span> seconds...</p>
+  </div>
+</div>
+  <header>
+    <div class="container">
+      <img src="../images/nsw_logo.png" alt="Naval Special Warfare Command Logo" class="logo">
+      <h1>NAVAL SPECIAL WARFARE COMMAND</h1>
+      <p class="subhead">OFFICIAL RECRUITING & ASSIGNMENT PORTAL</p>
+    </div>
+  </header>
+<nav class="nav-info">
+  <div class="container nav-container">
+    <ul class="nav-tabs issued-tabs">
+      <li><a href="/" >Structure</a></li>
+      <li><a class="active" href="/apply/">Candidate Submission</a></li>
+    </ul>
+  </div>
+</nav>
+
+  <main>
+    <div id="view-apply">
+    <section class="reveal">
+      <div class="container">
+        <form>
+          <fieldset>
+<div class="field full">
+  <label>Are you currently in any other unit?</label>
+  <select id="other-unit" name="other_unit" required>
+    <option value="">Select</option>
+    <option value="No">No</option>
+    <option value="Yes">Yes</option>
+  </select>
+  <p id="unit-warning" style="display:none; color:#c0392b; font-size:12px; margin-top:6px; font-weight:500;">
+    Your application cannot proceed while you are an active member of another unit.
+  </p>
+</div>
+<div class="field full" style="margin-top: -10px;" id="availability-est-wrapper">
+  <label>Are you available at our scheduled session time? (WED/SAT)</label>
+  <p style="font-size: 13px; margin-bottom: 6px; margin-top: -8px; color: #444;">
+  </p>
+<p id="local-time-display" style="font-size: 12px; color: #777; margin-bottom: 10px;">
+  <strong>Your time:</strong> calculating... <strong>Our time:</strong> 15:00 (EST)
+</p>
+  <select id="availability-est" name="availability_est" required>
+    <option value="">Select</option>
+    <option value="Yes">Yes, I am available at that time</option>
+    <option value="No">No, that time does not work for me</option>
+  </select>
+  <p id="availability-warning" style="display:none; color:#c0392b; font-size:12px; margin-top:6px; font-weight:500;">
+  We set a requirement to be available at least 2 days per week during scheduled session times.
+</p>
+</div>
+<style>
+  #other-unit {
+  width: 100%;
+  padding: 8px;
+  font-size: 13px;
+  margin-bottom: 30px;
+}
+
+#unit-warning {
+  transition: opacity 0.3s ease;
+}
+
+/* "Are you in another unit?" section styling */
+.field.full#other-unit-wrapper,
+.field.full select#other-unit {
+  margin-bottom: 30px;
+}
+
+/* Ensures consistent alignment with your field grid */
+.field.full {
+  position: relative;
+  margin-bottom: 30px; /* extra spacing for cleaner separation */
+}
+
+/* Optional: when disabled, dim the form visually */
+form[disabled] {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Warning message */
+#unit-warning {
+  margin-top: 6px;
+  margin-bottom: 4px;
+  padding-left: 2px; /* aligns with the left vertical guideline */
+  transition: opacity 0.3s ease;
+}
+
+</style>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  /* === Convert 3PM EST to local time dynamically === */
+  const localDisplay = document.getElementById("local-time-display");
+  try {
+    const estDate = new Date();
+    estDate.setUTCHours(20, 0, 0, 0); // 3PM EST = 20:00 UTC
+    const localTime = estDate.toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+    });
+    const tzName = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    localDisplay.innerHTML = `<strong>Your time:</strong> ${localTime} (${tzName}) <strong>Our time:</strong> 15:00 (EST)`;
+  } catch (e) {
+    localDisplay.textContent = "Unable to determine your local time.";
+  }
+
+  const form = document.querySelector("form");
+
+  /* === "Are you in another unit?" handler === */
+  const unitSelect = document.getElementById("other-unit");
+  const unitWarning = document.getElementById("unit-warning");
+
+  unitSelect.addEventListener("change", () => {
+    const isYes = unitSelect.value === "Yes";
+    const fields = form.querySelectorAll("input, select, textarea, button");
+
+    fields.forEach(field => field.disabled = isYes);
+
+    if (isYes) {
+      unitWarning.style.display = "block";
+      unitWarning.style.opacity = "1";
+      form.style.opacity = "0.6";
+    } else {
+      unitWarning.style.opacity = "0";
+      form.style.opacity = "1";
+      setTimeout(() => (unitWarning.style.display = "none"), 200);
+      fields.forEach(field => field.disabled = false);
+    }
+  });
+
+  /* === "Are you available at 3PM EST?" handler === */
+  const estSelect = document.getElementById("availability-est");
+  const availWarning = document.getElementById("availability-warning");
+
+  if (estSelect) {
+    estSelect.addEventListener("change", () => {
+      const isNo = estSelect.value === "No";
+      const fields = form.querySelectorAll("input, select, textarea, button");
+
+      fields.forEach(field => field.disabled = isNo);
+
+      if (isNo) {
+        availWarning.style.display = "block";
+        availWarning.style.opacity = "1";
+        form.style.opacity = "0.6";
+      } else {
+        availWarning.style.opacity = "0";
+        form.style.opacity = "1";
+        setTimeout(() => (availWarning.style.display = "none"), 200);
+        fields.forEach(field => field.disabled = false);
+      }
+    });
+  }
+});
+</script>
+
+
+            <legend>PERSONAL IDENTIFICATION</legend>
+            <div class="grid">
+              <div class="field">
+                <label>Full Fictional Name</label>
+                <input type="text" name="fictional_name" required>
+              </div>
+              <div class="field">
+                <label>First Name</label>
+                <input type="text" name="first_name" required>
+              </div>
+              <div class="field">
+                <label>Discord Username</label>
+                <input type="text" name="discord_username" placeholder="Example: Operator#1234" required>
+              </div>
+                <div class="field">
+  <label>Date of Birth</label>
+  <input type="text" name="dob" id="dob" placeholder="DD/MM/YYYY" required>
+  <p id="dob-error" class="error-message" style="display:none; color: #e74c3c; font-weight: 600; font-size: 10px;">You must be at least 18 years old to proceed.</p>
+</div>
+
+
+            <div class="field">
+            <label>Country of Residence</label>
+            <select id="residence-select" name="residence" required>
+                <option value="">Select Country</option>
+                <option value="Afghanistan">Afghanistan</option>
+                <option value="Albania">Albania</option>
+                <option value="Algeria">Algeria</option>
+                <option value="Andorra">Andorra</option>
+                <option value="Angola">Angola</option>
+                <option value="Antigua and Barbuda">Antigua and Barbuda</option>
+                <option value="Argentina">Argentina</option>
+                <option value="Armenia">Armenia</option>
+                <option value="Australia">Australia</option>
+                <option value="Austria">Austria</option>
+                <option value="Azerbaijan">Azerbaijan</option>
+                <option value="Bahamas">Bahamas</option>
+                <option value="Bahrain">Bahrain</option>
+                <option value="Bangladesh">Bangladesh</option>
+                <option value="Barbados">Barbados</option>
+                <option value="Belarus">Belarus</option>
+                <option value="Belgium">Belgium</option>
+                <option value="Belize">Belize</option>
+                <option value="Benin">Benin</option>
+                <option value="Bhutan">Bhutan</option>
+                <option value="Bolivia">Bolivia</option>
+                <option value="Bosnia and Herzegovina">Bosnia and Herzegovina</option>
+                <option value="Botswana">Botswana</option>
+                <option value="Brazil">Brazil</option>
+                <option value="Brunei">Brunei</option>
+                <option value="Bulgaria">Bulgaria</option>
+                <option value="Burkina Faso">Burkina Faso</option>
+                <option value="Burundi">Burundi</option>
+                <option value="Cabo Verde">Cabo Verde</option>
+                <option value="Cambodia">Cambodia</option>
+                <option value="Cameroon">Cameroon</option>
+                <option value="Canada">Canada</option>
+                <option value="Central African Republic">Central African Republic</option>
+                <option value="Chad">Chad</option>
+                <option value="Chile">Chile</option>
+                <option value="China">China</option>
+                <option value="Colombia">Colombia</option>
+                <option value="Comoros">Comoros</option>
+                <option value="Congo, Democratic Republic of the">Congo, Democratic Republic of the</option>
+                <option value="Congo, Republic of the">Congo, Republic of the</option>
+                <option value="Costa Rica">Costa Rica</option>
+                <option value="Croatia">Croatia</option>
+                <option value="Cuba">Cuba</option>
+                <option value="Cyprus">Cyprus</option>
+                <option value="Czech Republic">Czech Republic</option>
+                <option value="Denmark">Denmark</option>
+                <option value="Djibouti">Djibouti</option>
+                <option value="Dominica">Dominica</option>
+                <option value="Dominican Republic">Dominican Republic</option>
+                <option value="Ecuador">Ecuador</option>
+                <option value="Egypt">Egypt</option>
+                <option value="El Salvador">El Salvador</option>
+                <option value="Equatorial Guinea">Equatorial Guinea</option>
+                <option value="Eritrea">Eritrea</option>
+                <option value="Estonia">Estonia</option>
+                <option value="Eswatini">Eswatini</option>
+                <option value="Ethiopia">Ethiopia</option>
+                <option value="Fiji">Fiji</option>
+                <option value="Finland">Finland</option>
+                <option value="France">France</option>
+                <option value="Gabon">Gabon</option>
+                <option value="Gambia">Gambia</option>
+                <option value="Georgia">Georgia</option>
+                <option value="Germany">Germany</option>
+                <option value="Ghana">Ghana</option>
+                <option value="Greece">Greece</option>
+                <option value="Grenada">Grenada</option>
+                <option value="Guatemala">Guatemala</option>
+                <option value="Guinea">Guinea</option>
+                <option value="Guinea-Bissau">Guinea-Bissau</option>
+                <option value="Guyana">Guyana</option>
+                <option value="Haiti">Haiti</option>
+                <option value="Honduras">Honduras</option>
+                <option value="Hungary">Hungary</option>
+                <option value="Iceland">Iceland</option>
+                <option value="India">India</option>
+                <option value="Indonesia">Indonesia</option>
+                <option value="Iran">Iran</option>
+                <option value="Iraq">Iraq</option>
+                <option value="Ireland">Ireland</option>
+                <option value="Israel">Israel</option>
+                <option value="Italy">Italy</option>
+                <option value="Jamaica">Jamaica</option>
+                <option value="Japan">Japan</option>
+                <option value="Jordan">Jordan</option>
+                <option value="Kazakhstan">Kazakhstan</option>
+                <option value="Kenya">Kenya</option>
+                <option value="Kiribati">Kiribati</option>
+                <option value="Korea, North">Korea, North</option>
+                <option value="Korea, South">Korea, South</option>
+                <option value="Kosovo">Kosovo</option>
+                <option value="Kuwait">Kuwait</option>
+                <option value="Kyrgyzstan">Kyrgyzstan</option>
+                <option value="Laos">Laos</option>
+                <option value="Latvia">Latvia</option>
+                <option value="Lebanon">Lebanon</option>
+                <option value="Lesotho">Lesotho</option>
+                <option value="Liberia">Liberia</option>
+                <option value="Libya">Libya</option>
+                <option value="Liechtenstein">Liechtenstein</option>
+                <option value="Lithuania">Lithuania</option>
+                <option value="Luxembourg">Luxembourg</option>
+                <option value="Madagascar">Madagascar</option>
+                <option value="Malawi">Malawi</option>
+                <option value="Malaysia">Malaysia</option>
+                <option value="Maldives">Maldives</option>
+                <option value="Mali">Mali</option>
+                <option value="Malta">Malta</option>
+                <option value="Marshall Islands">Marshall Islands</option>
+                <option value="Mauritania">Mauritania</option>
+                <option value="Mauritius">Mauritius</option>
+                <option value="Mexico">Mexico</option>
+                <option value="Micronesia">Micronesia</option>
+                <option value="Moldova">Moldova</option>
+                <option value="Monaco">Monaco</option>
+                <option value="Mongolia">Mongolia</option>
+                <option value="Montenegro">Montenegro</option>
+                <option value="Morocco">Morocco</option>
+                <option value="Mozambique">Mozambique</option>
+                <option value="Myanmar (Burma)">Myanmar (Burma)</option>
+                <option value="Namibia">Namibia</option>
+                <option value="Nauru">Nauru</option>
+                <option value="Nepal">Nepal</option>
+                <option value="Netherlands">Netherlands</option>
+                <option value="New Zealand">New Zealand</option>
+                <option value="Nicaragua">Nicaragua</option>
+                <option value="Niger">Niger</option>
+                <option value="Nigeria">Nigeria</option>
+                <option value="North Macedonia">North Macedonia</option>
+                <option value="Norway">Norway</option>
+                <option value="Oman">Oman</option>
+                <option value="Pakistan">Pakistan</option>
+                <option value="Palau">Palau</option>
+                <option value="Palestine">Palestine</option>
+                <option value="Panama">Panama</option>
+                <option value="Papua New Guinea">Papua New Guinea</option>
+                <option value="Paraguay">Paraguay</option>
+                <option value="Peru">Peru</option>
+                <option value="Philippines">Philippines</option>
+                <option value="Poland">Poland</option>
+                <option value="Portugal">Portugal</option>
+                <option value="Qatar">Qatar</option>
+                <option value="Romania">Romania</option>
+                <option value="Russia">Russia</option>
+                <option value="Rwanda">Rwanda</option>
+                <option value="Saint Kitts and Nevis">Saint Kitts and Nevis</option>
+                <option value="Saint Lucia">Saint Lucia</option>
+                <option value="Saint Vincent and the Grenadines">Saint Vincent and the Grenadines</option>
+                <option value="Samoa">Samoa</option>
+                <option value="San Marino">San Marino</option>
+                <option value="Sao Tome and Principe">Sao Tome and Principe</option>
+                <option value="Saudi Arabia">Saudi Arabia</option>
+                <option value="Senegal">Senegal</option>
+                <option value="Serbia">Serbia</option>
+                <option value="Seychelles">Seychelles</option>
+                <option value="Sierra Leone">Sierra Leone</option>
+                <option value="Singapore">Singapore</option>
+                <option value="Slovakia">Slovakia</option>
+                <option value="Slovenia">Slovenia</option>
+                <option value="Solomon Islands">Solomon Islands</option>
+                <option value="Somalia">Somalia</option>
+                <option value="South Africa">South Africa</option>
+                <option value="South Sudan">South Sudan</option>
+                <option value="Sri Lanka">Sri Lanka</option>
+                <option value="Sudan">Sudan</option>
+                <option value="Suriname">Suriname</option>
+                <option value="Sweden">Sweden</option>
+                <option value="Switzerland">Switzerland</option>
+                <option value="Syria">Syria</option>
+                <option value="Taiwan">Taiwan</option>
+                <option value="Tajikistan">Tajikistan</option>
+                <option value="Tanzania">Tanzania</option>
+                <option value="Thailand">Thailand</option>
+                <option value="Timor-Leste">Timor-Leste</option>
+                <option value="Togo">Togo</option>
+                <option value="Tonga">Tonga</option>
+                <option value="Trinidad and Tobago">Trinidad and Tobago</option>
+                <option value="Tunisia">Tunisia</option>
+                <option value="Turkey">Turkey</option>
+                <option value="Turkmenistan">Turkmenistan</option>
+                <option value="Tuvalu">Tuvalu</option>
+                <option value="Uganda">Uganda</option>
+                <option value="Ukraine">Ukraine</option>
+                <option value="United Arab Emirates">United Arab Emirates</option>
+                <option value="United Kingdom">United Kingdom</option>
+                <option value="United States">United States</option>
+                <option value="Uruguay">Uruguay</option>
+                <option value="Uzbekistan">Uzbekistan</option>
+                <option value="Vanuatu">Vanuatu</option>
+                <option value="Vatican City">Vatican City</option>
+                <option value="Venezuela">Venezuela</option>
+                <option value="Vietnam">Vietnam</option>
+                <option value="Yemen">Yemen</option>
+                <option value="Zambia">Zambia</option>
+                <option value="Zimbabwe">Zimbabwe</option>
+            </select>
+            </div>
+
+            <div class="field">
+            <label>Local Timezone</label>
+            <input type="text" name="timezone" id="timezone-field" readonly placeholder="Auto-filled">
+            </div>
+
+            <div class="field">
+  <label>Desired Role</label>
+<select name="desired_role" required>
+  <option value="">Select Role</option>
+
+  <optgroup label="DEVGRU (NSW)">
+    <option value="O29A - NSW DEVGRU Operator">O29A – NSW DEVGRU Operator</option>
+    <option value="IS-3910/3920/2923 - NSW Intel Officer">IS-3910/3920/2923 – NSW Intel Officer</option>
+    <option value="S2-TACD - ASOT II / HUMINT">S2-TACD – ASOT II / HUMINT</option>
+  </optgroup>
+
+  <optgroup label="160th SOAR (A)">
+    <option value="152C - MH-6M/AH-6M Pilot (Little Bird)">152C – MH-6M/AH-6M Pilot (Little Bird)</option>
+    <option value="153E - MH-60M Pilot (Black Hawk)">153E – MH-60M Pilot (Black Hawk)</option>
+    <option value="154E - MH-47G Pilot (Chinook)">154E – MH-47G Pilot (Chinook)</option>
+  </optgroup>
+
+  <optgroup label="24th STS (AFSOC)">
+    <option value="1C2X1 - Combat Controller (CCT)">1C2X1 – Combat Controller (CCT)</option>
+    <option value="1T2X1 - Pararescue (PJ)">1T2X1 – Pararescue (PJ)</option>
+    <option value="3E8X1 - Explosive Ordnance Disposal (EOD)">3E8X1 – Explosive Ordnance Disposal (EOD)</option>
+  </optgroup>
+</select>
+
+  <p class="role-status-note">
+    Please verify the current <strong>role availability</strong> on the main structure page before submitting your application.
+  </p>
+
+</div>
+
+
+
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>READINESS & OPERATIONAL COMMITMENT</legend>
+            <div class="grid">
+              <div class="field">
+                <label>Availability for Scheduled Training</label>
+                <select name="availability">
+                  <option>Weekly Rotation</option>
+                  <option>Bi-Weekly Only</option>
+                  <option>Not Routinely Available</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Access to Authorized Comms Suite (ACRE2)</label>
+                <select name="comms">
+                  <option>Operational and Configured</option>
+                  <option>Pending Setup</option>
+                  <option>Unavailable</option>
+                </select>
+              </div>
+              <div class="field full">
+                <label>System Reliability and Connectivity</label>
+                <select name="hardware">
+                  <option>Stable Deployment Platform</option>
+                  <option>Occasional Interruption</option>
+                  <option>Unstable</option>
+                </select>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>SIMULATED SERVICE HISTORY</legend>
+            <div class="grid">
+              <div class="field full">
+                <label>Prior Units / Commands</label>
+                <textarea name="unit_background" rows="3" placeholder="Designation, billet, duration."></textarea>
+              </div>
+              <div class="field full">
+                <label>Roles Trained In</label>
+                <textarea name="roles" rows="3" placeholder="E.g. SO-Operator (Assaulter), 822A (JTAC), O19A (Sniper), HM-L03A (FMF Corpsman), O22A (ASOT), O29A (NSW D&E Operator), O26A (SEAL), SO-Team Leader, SO-Communicator."></textarea>
+
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>FIELD PROFICIENCY & SOP INTEGRATION</legend>
+            <div class="grid">
+              <div class="field full">
+                <label>Small Unit Tactics Familiarity</label>
+                <select name="sut">
+                  <option>Fireteam/Squad Coordination Experience</option>
+                  <option>Partial Training</option>
+                  <option>Unfamiliar</option>
+                </select>
+              </div>
+              <div class="field full">
+                <label>Understanding of SOP Framework</label>
+                <select name="sop">
+                  <option>Understands Phased Operations, Comms, Breach Protocols, and Comms Discipline</option>
+                  <option>Partial Exposure</option>
+                  <option>Requires Orientation</option>
+                </select>
+              </div>
+              <div class="field full">
+                <label>Mission Planning Experience</label>
+                <textarea name="planning" rows="3" placeholder="CONOPs, Overlays, Target Packages, Risk Assessments."></textarea>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>CANDIDATE INTENT</legend>
+            <div class="grid">
+              <div class="field full">
+                <label>Why Are You Seeking Assignment to NSW Simulation</label>
+                <textarea name="intent" rows="4" placeholder="What draws you to NSW and what you aim to contribute."></textarea>
+              </div>
+              <div class="field full">
+                <label>Discipline, Accountability, and Conduct</label>
+                <textarea name="discipline" rows="3" placeholder="Describe your principles and approach to team responsibility."></textarea>
+              </div>
+              <div class="field full">
+                <label>Known Limitations (Schedule, Hardware, Language)</label>
+                <textarea name="limitations" rows="2"></textarea>
+              </div>
+            </div>
+          </fieldset>
+
+    <p style="font-size: 13px; color: #555; margin-top: 30px; margin-bottom: 10px;">
+      <strong>Notice:</strong> By submitting this candidate packet, you confirm your intent to participate in a structured NSW simulation pipeline. This includes formal evaluation, training, and adherence to operational standards. Submissions are reviewed with the expectation of discipline, accountability, and sustained commitment to realism-based immersion.
+    </p>
+    <br>
+    <hr>
+    <br>
+
+
+          <button type="submit" class="btn-primary">SUBMIT CANDIDATE PACKET</button>
+        </form>
+      </div>
+    </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p class="footer-topline">NSW CANDIDATE SCREENING INTERFACE (SIMULATED)</p>
+      <p class="footer-subtext">This is a simulated interface for immersion and training purposes. Not affiliated with the U.S. Navy, DoD, or any military authority. All rights reserved for realism-based simulation only.</p>
+    </div>
+      <script src="../main.js"></script>
+
+  </footer>
+  <div id="notification-container"></div>
+</body>
+<script>
+  const cooldownKey = 'nsw_application_cooldown';
+  const cooldownTime = 1;
+  const WEBHOOK_URL = "https://discord.com/api/webhooks/1432022559976587276/3yPNX_C8GqyFOeTtGo253BtNRmuxxaRpGOpsxz3PoRPDXL6eNzR0e0__p1oYdPJH9FQh"; // <-- Replace this
+
+  function showNotification(message, success = true) {
+    const notification = document.getElementById('notification');
+    notification.textContent = message;
+    notification.style.background = success ? '#004085' : '#721c24';
+    notification.style.display = 'block';
+    notification.style.opacity = '1';
+
+    setTimeout(() => {
+      notification.style.opacity = '0';
+      setTimeout(() => {
+        notification.style.display = 'none';
+      }, 500);
+    }, 4000);
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    document.getElementById("timezone-field").value = tz;
+
+    document.querySelector("form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const now = Date.now();
+      const lastSubmitted = localStorage.getItem(cooldownKey);
+      if (lastSubmitted && now - lastSubmitted < cooldownTime) {
+        showNotification('Please wait 15 minutes before submitting another application.', false);
+        return;
+      }
+
+      const form = e.target;
+      const dobField = form.querySelector("#dob");
+      const dobError = document.getElementById("dob-error");
+
+      const dobValue = dobField.value.trim();
+      const [day, month, year] = dobValue.split("/");
+      const dobDate = new Date(`${year}-${month}-${day}`);
+      const today = new Date();
+      const age = today.getFullYear() - dobDate.getFullYear();
+      const hasHadBirthday = today.getMonth() > dobDate.getMonth() || (today.getMonth() === dobDate.getMonth() && today.getDate() >= dobDate.getDate());
+      const is18 = age > 18 || (age === 18 && hasHadBirthday);
+
+      if (isNaN(dobDate) || !is18) {
+        dobError.style.display = "block";
+        return;
+      } else {
+        dobError.style.display = "none";
+      }
+
+      const data = Object.fromEntries(new FormData(form).entries());
+
+      const payload = {
+        embeds: [
+          {
+            title: "📄 NSW Candidate Packet",
+            color: 16119285,
+            fields: [
+                {
+                  name: "Personal Identification",
+                  value:
+                    `**Fictional Name:** ${data.fictional_name}\n` +
+                    `**First Name:** ${data.first_name}\n` +
+                    `**Discord Username:** ${data.discord_username}\n` +
+                    `**Date of Birth:** ${data.dob}\n` +
+                    `**Country of Residence:** ${data.residence}\n` +
+                    `**Local Timezone:** ${data.timezone || "*Not Detected*"}\n` +
+                    `**Desired Role:** ${data.desired_role || "*Not Selected*"}`
+                }
+                ,
+              {
+                name: "Readiness & Operational Commitment",
+                value:
+                  `**Availability for Scheduled Training:** ${data.availability}\n` +
+                  `**Access to Authorized Comms Suite (ACRE2):** ${data.comms}\n` +
+                  `**System Reliability and Connectivity:** ${data.hardware}`
+              },
+              {
+                name: "Service History",
+                value:
+                  `**Prior Units / Commands:**\n${data.unit_background || "*None Provided*"}\n\n` +
+                  `**Roles Trained In:**\n${data.roles || "*None Provided*"}`
+              },
+              {
+                name: "Field Proficiency & SOP Integration",
+                value:
+                  `**Small Unit Tactics Familiarity:** ${data.sut}\n` +
+                  `**Understanding of SOP Framework:** ${data.sop}\n\n` +
+                  `**Mission Planning Experience:**\n${data.planning || "*None Provided*"}`
+              },
+              {
+                name: "Candidate Intent",
+                value:
+                  `**Why Are You Seeking Assignment to NSW Simulation:**\n${data.intent || "*Not Answered*"}\n\n` +
+                  `**Discipline, Accountability, and Conduct:**\n${data.discipline || "*Not Answered*"}\n\n` +
+                  `**Known Limitations (Schedule, Hardware, Language):**\n${data.limitations || "*None*"}`
+              }
+            ],
+            footer: {
+              text: "Naval Special Warfare Simulation — Candidate Screening"
+            },
+            timestamp: new Date().toISOString()
+          }
+        ]
+      };
+
+      try {
+        const response = await fetch(WEBHOOK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+          showNotification('Submission complete. Your packet has been received.');
+          localStorage.setItem(cooldownKey, Date.now());
+          form.reset();
+          document.getElementById("timezone-field").value = tz;
+        } else {
+          showNotification('Failed to submit application.', false);
+        }
+      } catch (error) {
+        showNotification('An unexpected error occurred.', false);
+        console.error("Submission error:", error);
+      }
+    });
+  });
+
+  function showNotification(message, type = 'success') {
+  const container = document.getElementById('notification-container');
+  const notif = document.createElement('div');
+  notif.className = `notification ${type}`;
+  notif.textContent = message;
+
+  container.appendChild(notif);
+
+  setTimeout(() => {
+    notif.remove();
+  }, 4500); // total duration of animation
+}
+
+</script>
+
+</html>
