@@ -85,25 +85,27 @@ const rankField = document.getElementById('rank-field');
 const rankLabel = document.getElementById('rank-label');
 const message = document.getElementById('message');
 
-function getBranchFromEmail(email) {
-    const value = String(email || '')
-        .trim()
-        .toLowerCase();
+const createDialog =
+    document.getElementById('create-account');
 
-    if (value.endsWith('@navy.mil')) {
-        return 'Navy';
-    }
+const createForm =
+    document.getElementById('create-account-form');
 
-    if (value.endsWith('@army.mil')) {
-        return 'Army';
-    }
+const createButton =
+    document.getElementById('create-account-button');
 
-    if (value.endsWith('@airforce.mil')) {
-        return 'Air Force';
-    }
+const createCancel =
+    document.getElementById('create-account-cancel');
 
-    return '';
-}
+const createMessage =
+    document.getElementById('create-account-message');
+
+const createRankField =
+    document.getElementById('create-rank-field');
+
+const createRankLabel =
+    document.getElementById('create-rank-label');
+
 
 function getRank(person) {
     const branch = person.branch || '';
@@ -297,6 +299,214 @@ function updateAssignmentPreview() {
         '3 Troop',
         '3 Troop'
     );
+}
+
+function populateCreateRankDropdown(
+    branch,
+    selectedRank = ''
+) {
+    const select =
+        createForm.elements.rank;
+
+    const ranks =
+        getRankList(branch);
+
+    select.innerHTML = '';
+
+    const blank =
+        document.createElement('option');
+
+    blank.value = '';
+    blank.textContent = 'Unassigned';
+
+    select.appendChild(blank);
+
+    for (const [value, label] of ranks) {
+        const option =
+            document.createElement('option');
+
+        option.value = value;
+        option.textContent = label;
+
+        select.appendChild(option);
+    }
+
+    select.value =
+        selectedRank || '';
+}
+
+function populateCreateCallsigns() {
+    const select =
+        createForm.elements.callsign;
+
+    select.innerHTML = '';
+
+    const unassigned =
+        document.createElement('option');
+
+    unassigned.value = '';
+    unassigned.textContent =
+        'Unassigned';
+
+    select.appendChild(unassigned);
+
+    for (const slot of slots) {
+        const occupant =
+            people.find(person =>
+                person.callsign ===
+                slot.callsign
+            );
+
+        const option =
+            document.createElement('option');
+
+        option.value =
+            slot.callsign;
+
+        const role =
+            slot.default_role
+                ? ` - ${slot.default_role}`
+                : '';
+
+        if (occupant) {
+            option.textContent =
+                `${slot.callsign}${role} - OCCUPIED`;
+
+            option.disabled = true;
+        } else {
+            option.textContent =
+                `${slot.callsign}${role}`;
+        }
+
+        select.appendChild(option);
+    }
+}
+
+function setCreatePreview(
+    field,
+    value
+) {
+    createForm.elements[field].value =
+        value || 'Unassigned';
+}
+
+function updateCreateAssignmentPreview() {
+    const callsign =
+        createForm.elements.callsign.value;
+
+    const slot =
+        getSlot(callsign);
+
+    if (!slot) {
+        setCreatePreview(
+            'team',
+            'Unassigned'
+        );
+
+        setCreatePreview(
+            'billet',
+            'Unassigned'
+        );
+
+        setCreatePreview(
+            'squadron',
+            'Unassigned'
+        );
+
+        setCreatePreview(
+            'troop',
+            'Unassigned'
+        );
+
+        return;
+    }
+
+    const team =
+        getTeamFromSlot(slot);
+
+    setCreatePreview(
+        'team',
+        team
+    );
+
+    setCreatePreview(
+        'billet',
+        slot.default_role
+    );
+
+    setCreatePreview(
+        'squadron',
+        'Red Squadron'
+    );
+
+    setCreatePreview(
+        'troop',
+        '3 Troop'
+    );
+
+    if (
+        slot.default_branch &&
+        !createForm.elements.branch.value
+    ) {
+        createForm.elements.branch.value =
+            slot.default_branch;
+
+        createRankField.hidden =
+            false;
+
+        createRankLabel.textContent =
+            `${slot.default_branch} Rank`;
+
+        populateCreateRankDropdown(
+            slot.default_branch
+        );
+    }
+}
+
+function openCreateAccount() {
+    createForm.reset();
+
+    createMessage.textContent = '';
+
+    createForm.elements.candidate.value =
+        'false';
+
+    createForm.elements.leadership.value =
+        'Member';
+
+    createForm.elements.status.value =
+        'active';
+
+    createForm.elements.admin.value =
+        'false';
+
+    createForm.elements.cadre.value =
+        'false';
+
+    const today =
+        new Date();
+
+    const localDate =
+        [
+            today.getFullYear(),
+            String(
+                today.getMonth() + 1
+            ).padStart(2, '0'),
+            String(
+                today.getDate()
+            ).padStart(2, '0')
+        ].join('-');
+
+    createForm.elements.unit_joined_at.value =
+        localDate;
+
+    createRankField.hidden = true;
+
+    populateCreateRankDropdown('');
+    populateCreateCallsigns();
+    updateCreateAssignmentPreview();
+
+    createDialog.showModal();
 }
 
 async function load() {
@@ -521,30 +731,33 @@ form.addEventListener('submit', async event => {
 
     const fields = form.elements;
 
-    const args = {
-        p_id: current.id,
+const args = {
+    p_id: current.id,
 
-        p_callsign:
-            fields.callsign.value || null,
+    p_callsign:
+        fields.callsign.value || null,
 
-        p_rank:
-            fields.rank.value || null,
+    p_branch:
+        fields.branch.value || null,
 
-        p_leadership_level:
-            fields.leadership.value,
+    p_rank:
+        fields.rank.value || null,
 
-        p_is_admin:
-            fields.admin.value === 'true',
+    p_leadership_level:
+        fields.leadership.value,
 
-        p_is_cadre:
-            fields.cadre.value === 'true',
+    p_is_admin:
+        fields.admin.value === 'true',
 
-        p_is_candidate:
-            fields.candidate.value === 'true',
+    p_is_cadre:
+        fields.cadre.value === 'true',
 
-        p_account_status:
-            fields.status.value
-    };
+    p_is_candidate:
+        fields.candidate.value === 'true',
+
+    p_account_status:
+        fields.status.value
+};
 
     const { error } = await supabase.rpc(
         'admin_update_account',
@@ -566,6 +779,195 @@ document
     .addEventListener('click', () => {
         dialog.close();
     });
+
+createButton.addEventListener(
+    'click',
+    openCreateAccount
+);
+
+createCancel.addEventListener(
+    'click',
+    () => {
+        createDialog.close();
+    }
+);
+
+createForm.elements.branch.addEventListener(
+    'change',
+    () => {
+        const branch =
+            createForm.elements.branch.value;
+
+        if (!branch) {
+            createRankField.hidden =
+                true;
+
+            populateCreateRankDropdown('');
+
+            return;
+        }
+
+        createRankField.hidden =
+            false;
+
+        createRankLabel.textContent =
+            `${branch} Rank`;
+
+        populateCreateRankDropdown(
+            branch
+        );
+    }
+);
+
+createForm.elements.callsign.addEventListener(
+    'change',
+    updateCreateAssignmentPreview
+);
+
+createForm.addEventListener(
+    'submit',
+    async event => {
+        event.preventDefault();
+
+        createMessage.textContent = '';
+
+        const fields =
+            createForm.elements;
+
+        const submitButton =
+            createForm.querySelector(
+                'button[type="submit"]'
+            );
+
+        submitButton.disabled = true;
+        submitButton.textContent =
+            'Creating...';
+
+        try {
+            const {
+                data,
+                error
+            } =
+                await supabase.functions.invoke(
+                    'create-personnel-account',
+                    {
+                        body: {
+                            first_name:
+                                fields.first.value
+                                    .trim(),
+
+                            last_name:
+                                fields.last.value
+                                    .trim(),
+
+                            email:
+                                fields.email.value
+                                    .trim()
+                                    .toLowerCase(),
+
+                            password:
+                                fields.password.value,
+
+                            is_candidate:
+                                fields.candidate.value ===
+                                'true',
+
+                            branch:
+                                fields.branch.value ||
+                                null,
+
+                            rank:
+                                fields.rank.value ||
+                                null,
+
+                            callsign:
+                                fields.callsign.value ||
+                                null,
+
+                            leadership_level:
+                                fields.leadership.value,
+
+                            account_status:
+                                fields.status.value,
+
+                            is_admin:
+                                fields.admin.value ===
+                                'true',
+
+                            is_cadre:
+                                fields.cadre.value ===
+                                'true',
+
+                            unit_joined_at:
+                                fields.unit_joined_at.value ||
+                                null,
+
+                            timezone:
+                                Intl.DateTimeFormat()
+                                    .resolvedOptions()
+                                    .timeZone ||
+                                null
+                        }
+                    }
+                );
+
+            if (error) {
+                let errorMessage =
+                    error.message ||
+                    'Account creation failed.';
+
+                if (
+                    error.context &&
+                    typeof error.context.json ===
+                    'function'
+                ) {
+                    try {
+                        const response =
+                            await error.context.json();
+
+                        if (response?.error) {
+                            errorMessage =
+                                response.error;
+                        }
+                    } catch {
+                    }
+                }
+
+                throw new Error(
+                    errorMessage
+                );
+            }
+
+            if (
+                !data?.ok &&
+                !data?.success
+            ) {
+                throw new Error(
+                    data?.error ||
+                    'Account creation failed.'
+                );
+            }
+
+            createDialog.close();
+
+            await load();
+        } catch (error) {
+            console.error(
+                'Create account failed:',
+                error
+            );
+
+            createMessage.textContent =
+                error?.message ||
+                'Account creation failed.';
+        } finally {
+            submitButton.disabled = false;
+
+            submitButton.textContent =
+                'Create Account';
+        }
+    }
+);
 
 search.addEventListener(
     'input',
