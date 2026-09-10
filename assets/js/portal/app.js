@@ -209,7 +209,15 @@ state.instructor =
 state.leadership =
   Boolean(leadershipResult.data);
 
-  const { data: people, error: peopleError } = await supabase.rpc('get_portal_people');
+const newSessionButton =
+  $('new-session-button');
+
+if (newSessionButton) {
+  newSessionButton.hidden =
+    !state.leadership;
+}
+
+const { data: people, error: peopleError } = await supabase.rpc('get_portal_people');
   if (peopleError) throw peopleError;
   state.people = people || [];
 
@@ -1146,19 +1154,30 @@ $('candidate-form')?.addEventListener('submit', async (event) => {
   if (people) state.people = people;
 });
 
-bootstrap().catch(async (error) => {
-  console.error(error);
-  gate.textContent = `Portal initialization failed: ${error.message}`;
-});
+try {
+  await bootstrap();
 
-const requestedTab =
+  const requestedTab =
     new URLSearchParams(
-        window.location.search
+      window.location.search
     ).get('tab');
 
-if (
+  if (
     requestedTab === 'qualifications' ||
     requestedTab === 'attendance'
-) {
-    activatePortalTab(requestedTab);
+  ) {
+    activatePortalTab(
+      requestedTab
+    );
+  }
+} catch (error) {
+  console.error(
+    'Portal initialization failed:',
+    error
+  );
+
+  if (gate) {
+    gate.textContent =
+      `Portal initialization failed: ${error.message}`;
+  }
 }
