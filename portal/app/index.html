@@ -32,14 +32,28 @@
       </div>
     </header>
 
-    <nav class="tabs" aria-label="Portal sections">
-      <div class="tabs-inner">
-        <button class="tab active" data-tab="schedule" type="button">Scheduling</button>
-        <button class="tab" data-tab="qualifications" type="button">Qualifications</button>
-        <button class="tab" data-tab="attendance" type="button">Attendance</button>
-        <button class="tab" data-tab="personnel" id="personnel-tab-button" type="button" hidden>Personnel</button>
-      </div>
-    </nav>
+<nav class="tabs" aria-label="Portal sections">
+  <div class="tabs-inner">
+    <button class="tab active" data-tab="schedule" type="button">Scheduling</button>
+    <button class="tab" data-tab="qualifications" type="button">Qualifications</button>
+    <button class="tab" data-tab="attendance" type="button">Attendance</button>
+
+    <a class="tab portal-link" href="../orbat/">ORBAT</a>
+    <a class="tab portal-link" href="../loa/">LOA</a>
+    <a class="tab portal-link" href="../profile/">Profile</a>
+    <a class="tab portal-link" href="../admin/">Admin</a>
+
+    <button
+      class="tab"
+      data-tab="personnel"
+      id="personnel-tab-button"
+      type="button"
+      hidden
+    >
+      Personnel
+    </button>
+  </div>
+</nav>
 
     <main class="shell">
       <section class="panel active" id="tab-schedule">

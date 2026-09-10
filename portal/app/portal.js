@@ -79,7 +79,7 @@ document.querySelectorAll('[data-close-dialog]').forEach((button) => {
 
 document.querySelectorAll('.tab').forEach((button) => {
   button.addEventListener('click', () => {
-    document.querySelectorAll('.tab').forEach((b) => b.classList.remove('active'));
+    document.querySelectorAll('button.tab[data-tab]').forEach((b) => b.classList.remove('active'));
     document.querySelectorAll('.panel').forEach((p) => p.classList.remove('active'));
     button.classList.add('active');
     $(`tab-${button.dataset.tab}`)?.classList.add('active');
