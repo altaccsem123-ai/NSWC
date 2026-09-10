@@ -168,7 +168,11 @@ async function bootstrap() {
   }
 
   state.account = account;
-  state.candidate = account.is_candidate || String(account.email || '').toLowerCase().endsWith('@candidate.mil');
+  state.candidate =
+  String(account.email || '')
+    .trim()
+    .toLowerCase()
+    .endsWith('@candidate.mil');
 
 const [
   instructorResult,
