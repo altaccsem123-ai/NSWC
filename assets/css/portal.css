@@ -1132,6 +1132,11 @@ button:disabled {
 [hidden] {
   display: none !important;
 }
+
+.orbat-shell {
+  max-width: 1500px
+}
+
 .orbat-grid {
   width: 100%;
   display: grid;
