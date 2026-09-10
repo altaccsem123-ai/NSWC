@@ -3,14 +3,19 @@ import { supabase } from './shell.js';
 const state = {
   user: null,
   account: null,
+
   instructor: false,
+  leadership: false,
   candidate: false,
+
   people: [],
   qualifications: [],
   sessions: [],
   responses: [],
+
   scheduleFilter: 'upcoming',
   attendanceCohort: 'full',
+
   selectedQualificationPerson: null,
   selectedSession: null
 };
@@ -165,9 +170,44 @@ async function bootstrap() {
   state.account = account;
   state.candidate = account.is_candidate || String(account.email || '').toLowerCase().endsWith('@candidate.mil');
 
-  const { data: instructor, error: instructorError } = await supabase.rpc('portal_is_instructor', { p_user: state.user.id });
-  if (instructorError) console.warn(instructorError);
-  state.instructor = Boolean(instructor);
+const [
+  instructorResult,
+  leadershipResult
+] = await Promise.all([
+  supabase.rpc(
+    'portal_is_instructor',
+    {
+      p_user: state.user.id
+    }
+  ),
+
+  supabase.rpc(
+    'portal_is_leadership',
+    {
+      p_user: state.user.id
+    }
+  )
+]);
+
+if (instructorResult.error) {
+  console.warn(
+    'Instructor check failed:',
+    instructorResult.error
+  );
+}
+
+if (leadershipResult.error) {
+  console.warn(
+    'Leadership check failed:',
+    leadershipResult.error
+  );
+}
+
+state.instructor =
+  Boolean(instructorResult.data);
+
+state.leadership =
+  Boolean(leadershipResult.data);
 
   const { data: people, error: peopleError } = await supabase.rpc('get_portal_people');
   if (peopleError) throw peopleError;
@@ -177,7 +217,6 @@ async function bootstrap() {
   $('identity-name').textContent = `${[account.fictional_first_name, account.fictional_last_name].filter(Boolean).join(' ') || account.email}${account.callsign ? ` / ${account.callsign}` : ''}`;
   $('identity-meta').textContent = `${account.branch || (state.candidate ? 'Green Team' : 'NSWC')} // ${rankFor(account)}`;
 
-  if (!state.candidate) $('new-session-button').hidden = false;
   if (account.is_admin) $('personnel-tab-button').hidden = false;
   if (state.candidate) {
     document.querySelector('[data-cohort="full"]')?.setAttribute('hidden', '');
@@ -262,9 +301,54 @@ function renderSchedule() {
     desc.textContent = session.description || 'No session description provided.';
     const tags = document.createElement('div');
     tags.className = 'session-tags';
-    tags.append(tag(session.session_type, session.session_type === 'Official Training' ? 'official' : session.session_type === 'Green Team' ? 'green' : ''));
-    tags.append(tag(session.location));
-    tags.append(tag(session.status, session.status));
+tags.append(
+  tag(
+    session.session_type,
+    session.session_type ===
+      'Official Training'
+      ? 'official'
+      : session.session_type ===
+          'Green Team'
+        ? 'green'
+        : ''
+  )
+);
+
+if (
+  session.session_type ===
+  'Official Training'
+) {
+  tags.append(
+    tag(
+      'Mandatory',
+      'mandatory'
+    )
+  );
+}
+
+if (
+  session.session_type ===
+    'Green Team' &&
+  state.candidate
+) {
+  tags.append(
+    tag(
+      'Green Team Requirement',
+      'mandatory'
+    )
+  );
+}
+
+tags.append(
+  tag(session.location)
+);
+
+tags.append(
+  tag(
+    session.status,
+    session.status
+  )
+);
     main.append(title, desc, tags);
 
     const side = document.createElement('div');
@@ -305,57 +389,345 @@ $('new-session-button')?.addEventListener('click', () => openSessionForm());
 
 function configureSessionTypeOptions() {
   const type = $('session-type');
-  [...type.options].forEach((option) => {
-    option.disabled = !state.instructor && !state.account.is_admin && option.value !== 'Pro Development';
+
+  const canCreate =
+    state.leadership;
+
+  [...type.options].forEach(option => {
+    option.disabled =
+      !canCreate;
   });
-  if (!state.instructor && !state.account.is_admin) type.value = 'Pro Development';
+
+  type.disabled =
+    !canCreate;
+}
+
+function canManageSession(session) {
+  if (!session) {
+    return false;
+  }
+
+  if (state.instructor) {
+    return true;
+  }
+
+  if (state.account?.is_admin) {
+    return true;
+  }
+
+  return (
+    state.leadership &&
+    session.created_by === state.user?.id
+  );
+}
+
+function canDeleteSession(session) {
+  return canManageSession(session);
+}
+
+function canMarkAttendance() {
+  return (
+    state.instructor ||
+    state.account?.is_admin
+  );
 }
 
 function openSessionForm(session = null) {
+  const editing = Boolean(session);
+
+  if (!editing && !state.leadership) {
+    showError(
+      'Only leadership can schedule training sessions.'
+    );
+
+    return;
+  }
+
+  if (
+    editing &&
+    !canManageSession(session)
+  ) {
+    showError(
+      'You do not have permission to manage this session.'
+    );
+
+    return;
+  }
+
   configureSessionTypeOptions();
-  $('session-id').value = session?.id || '';
-  $('session-form-title').textContent = session ? 'Manage Session' : 'Create Session';
-  $('session-title').value = session?.title || '';
-  $('session-type').value = session?.session_type || 'Pro Development';
-  $('session-location').value = session?.location || 'Undecided';
-  $('session-start').value = session ? localInputValue(session.starts_at) : '';
-  $('session-description').value = session?.description || '';
-  $('session-status').value = session?.status || 'scheduled';
-  $('session-aar').value = session?.aar || '';
-  $('session-time-hint').textContent = `Entered in ${timezone}; viewers automatically see their own timezone.`;
-  $('delete-session-button').hidden = !session;
+
+  $('session-id').value =
+    session?.id || '';
+
+  $('session-form-title').textContent =
+    session
+      ? 'Manage Session'
+      : 'Create Session';
+
+  $('session-title').value =
+    session?.title || '';
+
+  $('session-type').value =
+    session?.session_type ||
+    'Official Training';
+
+  $('session-location').value =
+    session?.location ||
+    'Undecided';
+
+  $('session-start').value =
+    session
+      ? localInputValue(session.starts_at)
+      : '';
+
+  $('session-description').value =
+    session?.description || '';
+
+  $('session-status').value =
+    session?.status ||
+    'scheduled';
+
+  $('session-aar').value =
+    session?.aar || '';
+
+  $('session-time-hint').textContent =
+    `Enter this in your own timezone (${timezone}). It will be stored as UTC and automatically converted for every viewer.`;
+
+  $('delete-session-button').hidden =
+    !session ||
+    !canDeleteSession(session);
+
   $('session-dialog').showModal();
 }
 
-$('session-form')?.addEventListener('submit', async (event) => {
-  event.preventDefault();
-  const id = $('session-id').value;
-  const localStart = $('session-start').value;
-  if (!localStart) return;
-  const payload = {
-    title: $('session-title').value.trim(),
-    session_type: $('session-type').value,
-    location: $('session-location').value,
-    starts_at: new Date(localStart).toISOString(),
-    description: $('session-description').value.trim(),
-    status: $('session-status').value,
-    aar: $('session-aar').value.trim(),
-    completed_at: $('session-status').value === 'completed' ? new Date().toISOString() : null
-  };
-  let result;
-  if (id) {
-    result = await supabase.from('training_sessions').update(payload).eq('id', id);
-  } else {
-    result = await supabase.from('training_sessions').insert({ ...payload, created_by: state.user.id });
+$('session-form')?.addEventListener(
+  'submit',
+  async event => {
+    event.preventDefault();
+
+    const id =
+      $('session-id').value;
+
+    const localStart =
+      $('session-start').value;
+
+    if (!localStart) {
+      showError(
+        'You must select a date and time.'
+      );
+
+      return;
+    }
+
+    const existingSession =
+      id
+        ? state.sessions.find(
+            session =>
+              session.id === id
+          )
+        : null;
+
+    if (
+      !id &&
+      !state.leadership
+    ) {
+      showError(
+        'Only leadership can create sessions.'
+      );
+
+      return;
+    }
+
+    if (
+      id &&
+      !canManageSession(existingSession)
+    ) {
+      showError(
+        'You do not have permission to edit this session.'
+      );
+
+      return;
+    }
+
+    const title =
+      $('session-title')
+        .value
+        .trim();
+
+    if (!title) {
+      showError(
+        'Session title is required.'
+      );
+
+      return;
+    }
+
+    const sessionType =
+      $('session-type').value;
+
+    const location =
+      $('session-location').value;
+
+    const status =
+      $('session-status').value;
+
+    const validTypes = [
+      'Green Team',
+      'Pro Development',
+      'Official Training'
+    ];
+
+    const validLocations = [
+      'Dam Neck Annex',
+      'Mid-South Institute',
+      'Fort Johnson',
+      'Undecided'
+    ];
+
+    const validStatuses = [
+      'scheduled',
+      'completed',
+      'postponed',
+      'cancelled'
+    ];
+
+    if (
+      !validTypes.includes(
+        sessionType
+      )
+    ) {
+      showError(
+        'Invalid session type.'
+      );
+
+      return;
+    }
+
+    if (
+      !validLocations.includes(
+        location
+      )
+    ) {
+      showError(
+        'Invalid training location.'
+      );
+
+      return;
+    }
+
+    if (
+      !validStatuses.includes(
+        status
+      )
+    ) {
+      showError(
+        'Invalid session status.'
+      );
+
+      return;
+    }
+
+    /*
+     * datetime-local represents the user's own
+     * browser-local date/time.
+     *
+     * new Date(localStart) interprets it in that
+     * browser timezone, then toISOString() converts
+     * the exact instant to UTC for Supabase.
+     */
+    const startDate =
+      new Date(localStart);
+
+    if (
+      Number.isNaN(
+        startDate.getTime()
+      )
+    ) {
+      showError(
+        'The selected date and time is invalid.'
+      );
+
+      return;
+    }
+
+    const payload = {
+      title,
+
+      session_type:
+        sessionType,
+
+      location,
+
+      starts_at:
+        startDate.toISOString(),
+
+      description:
+        $('session-description')
+          .value
+          .trim(),
+
+      status,
+
+      aar:
+        $('session-aar')
+          .value
+          .trim(),
+
+      completed_at:
+        status === 'completed'
+          ? (
+              existingSession
+                ?.completed_at ||
+              new Date().toISOString()
+            )
+          : null
+    };
+
+    let result;
+
+    if (id) {
+      result = await supabase
+        .from('training_sessions')
+        .update(payload)
+        .eq('id', id)
+        .select()
+        .single();
+    } else {
+      result = await supabase
+        .from('training_sessions')
+        .insert({
+          ...payload,
+          created_by:
+            state.user.id
+        })
+        .select()
+        .single();
+    }
+
+    if (result.error) {
+      showError(
+        `Session could not be saved: ${result.error.message}`
+      );
+
+      return;
+    }
+
+    const savedSession =
+      result.data;
+
+    closeDialog(
+      'session-dialog'
+    );
+
+    await loadSchedule();
+
+    if (savedSession?.id) {
+      await openSessionDetail(
+        savedSession.id
+      );
+    }
   }
-  if (result.error) {
-    showError(`Session could not be saved: ${result.error.message}`);
-    return;
-  }
-  closeDialog('session-dialog');
-  await loadSchedule();
-  if (id) await openSessionDetail(id);
-});
+);
 
 $('delete-session-button')?.addEventListener('click', async () => {
   const id = $('session-id').value;
@@ -374,12 +746,43 @@ async function openSessionDetail(id) {
   $('detail-type').textContent = session.session_type;
   $('detail-title').textContent = session.title;
   $('detail-description').textContent = session.description || 'No description provided.';
-  $('detail-facts').replaceChildren(
-    fact('Local Time', formatLocal(session.starts_at)),
-    fact('Location', session.location),
-    fact('Status', session.status),
-    fact('Timezone', timezone)
+const hostAccount =
+  state.people.find(
+    person =>
+      person.id ===
+      session.created_by
   );
+
+const hostName =
+  hostAccount?.callsign ||
+  displayName(
+    hostAccount || {}
+  ) ||
+  'Unknown';
+
+$('detail-facts').replaceChildren(
+  fact(
+    'Your Time',
+    formatLocal(
+      session.starts_at
+    )
+  ),
+
+  fact(
+    'Location',
+    session.location
+  ),
+
+  fact(
+    'Host',
+    hostName
+  ),
+
+  fact(
+    'Status',
+    session.status
+  )
+);
   $('detail-aar').textContent = session.aar || '';
   $('aar-block').hidden = !session.aar;
 
@@ -389,9 +792,11 @@ async function openSessionDetail(id) {
   $('tentative-reason').value = mine?.tentative_reason || '';
   setMessage($('response-message'));
 
-  const canManage = state.instructor || state.account.is_admin || (session.created_by === state.user.id && session.session_type === 'Pro Development');
-  $('manage-session-button').hidden = !canManage;
-  $('attendance-marking-block').hidden = !state.instructor;
+$('manage-session-button').hidden =
+  !canManageSession(session);
+
+$('attendance-marking-block').hidden =
+  !canMarkAttendance();
 
   await loadSessionRoster(id);
   $('session-detail-dialog').showModal();
@@ -456,7 +861,11 @@ async function loadSessionRoster(sessionId) {
     return;
   }
   renderResponseRoster(roster || []);
-  if (state.instructor) renderAttendanceMarking(roster || []);
+  if (canMarkAttendance()) {
+  renderAttendanceMarking(
+    roster || []
+  );
+}
 }
 
 function renderResponseRoster(roster) {

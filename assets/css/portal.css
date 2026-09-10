@@ -455,6 +455,11 @@ button:disabled {
   background: #eef6f1;
   color: #35614c
 }
+.tag.mandatory {
+  border-color: #c9a45d;
+  background: #fff8e7;
+  color: #725517
+}
 
 .tag.completed {
   border-color: #9db7a9;
