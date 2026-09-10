@@ -97,6 +97,12 @@ export function renderPortalNav(
     );
 
     navigation += link(
+        'checklist',
+        'Checklist',
+        `${root}checklist/`
+    );
+
+    navigation += link(
         'loa',
         'LOA',
         `${root}loa/`

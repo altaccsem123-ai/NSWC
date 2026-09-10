@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="robots" content="noindex,nofollow">
+
+    <title>NSWC Checklist</title>
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="../../images/nsw_logo.png"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../../assets/css/portal.css"
+    >
+</head>
+
+<body>
+
+    <header class="topbar">
+
+        <div class="topbar-inner">
+
+            <a class="brand" href="../../">
+
+                <img
+                    src="../../images/nsw_logo.png"
+                    alt="NSWC emblem"
+                >
+
+                <div>
+                    <strong>
+                        NAVAL SPECIAL WARFARE COMMAND
+                    </strong>
+
+                    <span>
+                        Personnel Management System // 2012
+                    </span>
+                </div>
+
+            </a>
+
+            <div class="identity">
+
+                <div>
+                    <strong data-identity-name>
+                        Personnel
+                    </strong>
+
+                    <span data-identity-meta>
+                        Authenticated Session
+                    </span>
+                </div>
+
+                <button
+                    type="button"
+                    data-logout
+                >
+                    Sign Out
+                </button>
+
+            </div>
+
+        </div>
+
+    </header>
+
+    <div
+        data-portal-nav
+        data-active="checklist"
+    ></div>
+
+
+    <main class="shell checklist-shell">
+
+        <div class="page-head checklist-page-head">
+
+            <div>
+
+                <p class="eyebrow">
+                    Training Progression
+                </p>
+
+                <h1>
+                    Checklist
+                </h1>
+
+                <p class="subcopy">
+                    Pipeline progression, training requirements and
+                    pre-deployment readiness.
+                </p>
+
+            </div>
+
+            <div
+                id="checklist-mode-switch"
+                class="segmented checklist-mode-switch"
+            >
+
+                <button
+                    id="green-mode-button"
+                    type="button"
+                    data-mode="green"
+                >
+                    Green Team
+                </button>
+
+                <button
+                    id="deployment-mode-button"
+                    type="button"
+                    data-mode="deployment"
+                >
+                    Pre-Deployment
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <section
+            id="checklist-summary"
+            class="checklist-summary"
+        >
+
+            <div>
+
+                <span class="checklist-summary-label">
+                    Pipeline
+                </span>
+
+                <strong id="summary-title">
+                    Loading...
+                </strong>
+
+                <span id="summary-subtitle">
+                    Personnel progression
+                </span>
+
+            </div>
+
+            <div class="checklist-summary-stats">
+
+                <div>
+                    <span>Personnel</span>
+                    <strong id="summary-personnel">0</strong>
+                </div>
+
+                <div>
+                    <span>Completed</span>
+                    <strong id="summary-completed">0 / 0</strong>
+                </div>
+
+                <div>
+                    <span>Overall</span>
+                    <strong id="summary-percent">0%</strong>
+                </div>
+
+            </div>
+
+            <div class="checklist-summary-progress">
+
+                <div class="checklist-progress-track">
+                    <div
+                        id="summary-progress-bar"
+                        class="checklist-progress-fill"
+                    ></div>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="checklist-toolbar">
+
+            <div class="checklist-toolbar-group">
+
+                <label>
+
+                    <span>
+                        Search
+                    </span>
+
+                    <input
+                        id="checklist-search"
+                        class="portal-search"
+                        type="search"
+                        placeholder="Search personnel..."
+                    >
+
+                </label>
+
+
+                <label>
+
+                    <span>
+                        Team
+                    </span>
+
+                    <select id="checklist-team-filter">
+                        <option value="">
+                            Full Team
+                        </option>
+                    </select>
+
+                </label>
+
+
+                <label>
+
+                    <span>
+                        Progress
+                    </span>
+
+                    <select id="checklist-status-filter">
+
+                        <option value="">
+                            All Progress
+                        </option>
+
+                        <option value="not-started">
+                            Not Started
+                        </option>
+
+                        <option value="in-progress">
+                            In Progress
+                        </option>
+
+                        <option value="complete">
+                            Complete
+                        </option>
+
+                    </select>
+
+                </label>
+
+
+                <label>
+
+                    <span>
+                        Sort By
+                    </span>
+
+                    <select id="checklist-sort">
+
+                        <option value="progress-asc">
+                            Lowest Progress
+                        </option>
+
+                        <option value="progress-desc">
+                            Highest Progress
+                        </option>
+
+                        <option value="name-asc">
+                            Name A-Z
+                        </option>
+
+                        <option value="name-desc">
+                            Name Z-A
+                        </option>
+
+                        <option value="callsign">
+                            Callsign
+                        </option>
+
+                        <option value="team">
+                            Team
+                        </option>
+
+                    </select>
+
+                </label>
+
+            </div>
+
+
+            <div
+                id="deployment-controls"
+                class="checklist-toolbar-actions"
+                hidden
+            >
+
+                <select id="cycle-select">
+                    <option value="">
+                        Select Cycle
+                    </option>
+                </select>
+
+                <button
+                    id="create-cycle-button"
+                    class="primary-button"
+                    type="button"
+                    hidden
+                >
+                    Create Cycle
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <div
+            id="checklist-message"
+            class="form-message"
+        ></div>
+
+
+        <section
+            id="personnel-grid"
+            class="checklist-personnel-grid"
+        ></section>
+
+
+        <div
+            id="checklist-empty"
+            class="checklist-empty"
+            hidden
+        >
+
+            <strong>
+                No personnel found
+            </strong>
+
+            <span>
+                No personnel match the current checklist filters.
+            </span>
+
+        </div>
+
+    </main>
+
+
+    <!-- =====================================================
+         PERSONNEL CHECKLIST
+         ===================================================== -->
+
+    <dialog
+        id="personnel-checklist-dialog"
+        class="modal checklist-detail-modal"
+    >
+
+        <div class="modal-frame">
+
+            <div class="modal-head">
+
+                <div>
+
+                    <p
+                        id="detail-eyebrow"
+                        class="eyebrow"
+                    >
+                        Pipeline
+                    </p>
+
+                    <h2 id="detail-name">
+                        Personnel
+                    </h2>
+
+                    <p
+                        id="detail-meta"
+                        class="subcopy"
+                    ></p>
+
+                </div>
+
+                <button
+                    id="detail-close"
+                    class="secondary-button"
+                    type="button"
+                >
+                    Close
+                </button>
+
+            </div>
+
+
+            <div class="modal-body checklist-detail-body">
+
+                <section class="checklist-detail-summary">
+
+                    <div>
+
+                        <span>
+                            Overall Progress
+                        </span>
+
+                        <strong id="detail-percent">
+                            0%
+                        </strong>
+
+                    </div>
+
+                    <div class="checklist-progress-track">
+
+                        <div
+                            id="detail-progress-bar"
+                            class="checklist-progress-fill"
+                        ></div>
+
+                    </div>
+
+                    <small id="detail-count">
+                        0 / 0 requirements completed
+                    </small>
+
+                </section>
+
+
+                <div id="detail-groups"></div>
+
+            </div>
+
+        </div>
+
+    </dialog>
+
+
+    <!-- =====================================================
+         CREATE PRE-DEPLOYMENT CYCLE
+         ===================================================== -->
+
+    <dialog
+        id="create-cycle-dialog"
+        class="modal checklist-cycle-modal"
+    >
+
+        <form id="create-cycle-form">
+
+            <div class="modal-frame">
+
+                <div class="modal-head">
+
+                    <div>
+
+                        <p class="eyebrow">
+                            Pre-Deployment
+                        </p>
+
+                        <h2>
+                            Create Deployment Cycle
+                        </h2>
+
+                        <p class="subcopy">
+                            Select exactly what the unit needs to rehearse
+                            for this cycle.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal-body">
+
+                    <section class="checklist-cycle-section">
+
+                        <div class="checklist-cycle-section-head">
+
+                            <strong>
+                                Cycle Information
+                            </strong>
+
+                            <span>
+                                Name and training window.
+                            </span>
+
+                        </div>
+
+
+                        <div class="form-grid checklist-cycle-info">
+
+                            <label class="form-full">
+
+                                <span>
+                                    Cycle Name
+                                </span>
+
+                                <input
+                                    name="name"
+                                    type="text"
+                                    maxlength="120"
+                                    placeholder="Pre-Deployment Cycle"
+                                    required
+                                >
+
+                            </label>
+
+
+                            <label>
+
+                                <span>
+                                    Start Date
+                                </span>
+
+                                <input
+                                    name="starts_on"
+                                    type="date"
+                                >
+
+                            </label>
+
+
+                            <label>
+
+                                <span>
+                                    End Date
+                                </span>
+
+                                <input
+                                    name="ends_on"
+                                    type="date"
+                                >
+
+                            </label>
+
+                        </div>
+
+                    </section>
+
+
+                    <section class="checklist-cycle-section">
+
+                        <div class="checklist-cycle-section-head">
+
+                            <div>
+
+                                <strong>
+                                    Personnel
+                                </strong>
+
+                                <span>
+                                    Only active unit personnel can be
+                                    assigned.
+                                </span>
+
+                            </div>
+
+                            <div class="checklist-mini-actions">
+
+                                <button
+                                    id="select-all-members"
+                                    class="secondary-button"
+                                    type="button"
+                                >
+                                    Select All
+                                </button>
+
+                                <button
+                                    id="clear-members"
+                                    class="secondary-button"
+                                    type="button"
+                                >
+                                    Clear
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        <div
+                            id="cycle-member-list"
+                            class="checklist-selection-grid"
+                        ></div>
+
+                    </section>
+
+
+                    <section class="checklist-cycle-section">
+
+                        <div class="checklist-cycle-section-head">
+
+                            <div>
+
+                                <strong>
+                                    Training Package
+                                </strong>
+
+                                <span>
+                                    Pick any combination of training
+                                    requirements.
+                                </span>
+
+                            </div>
+
+                            <div class="checklist-mini-actions">
+
+                                <button
+                                    id="select-all-items"
+                                    class="secondary-button"
+                                    type="button"
+                                >
+                                    Select All
+                                </button>
+
+                                <button
+                                    id="clear-items"
+                                    class="secondary-button"
+                                    type="button"
+                                >
+                                    Clear
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        <div
+                            id="cycle-library"
+                            class="checklist-library"
+                        ></div>
+
+                    </section>
+
+
+                    <section class="checklist-cycle-section">
+
+                        <div class="checklist-cycle-section-head">
+
+                            <div>
+
+                                <strong>
+                                    Custom Requirements
+                                </strong>
+
+                                <span>
+                                    Add anything specific to this
+                                    deployment.
+                                </span>
+
+                            </div>
+
+                            <button
+                                id="add-custom-item"
+                                class="secondary-button"
+                                type="button"
+                            >
+                                Add Item
+                            </button>
+
+                        </div>
+
+                        <div
+                            id="custom-item-list"
+                            class="checklist-custom-items"
+                        ></div>
+
+                    </section>
+
+
+                    <div
+                        id="create-cycle-message"
+                        class="form-message"
+                    ></div>
+
+                </div>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        id="create-cycle-cancel"
+                        class="secondary-button"
+                        type="button"
+                    >
+                        Cancel
+                    </button>
+
+                    <div class="modal-actions-right">
+
+                        <button
+                            class="primary-button"
+                            type="submit"
+                        >
+                            Create Cycle
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </dialog>
+
+
+    <script
+        type="module"
+        src="../../assets/js/portal/checklist.js"
+    ></script>
+
+</body>
+
+</html>
