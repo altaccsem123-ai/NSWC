@@ -1268,37 +1268,235 @@ button:disabled {
 .portal-card-body {
   padding: 18px
 }
+.loa-layout {
+  align-items: start;
+  grid-template-columns: minmax(0, 1fr) minmax(0, .88fr);
+  gap: 14px
+}
 
-.loa-layout,
 .profile-layout {
   align-items: start
 }
 
+.loa-layout .content-card {
+  min-width: 0;
+  overflow: hidden
+}
+
+.loa-layout .card-head {
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  background: #f1f4f6;
+  border-bottom: 1px solid var(--line-dark)
+}
+
+.loa-layout .card-head strong {
+  color: var(--navy-900);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase
+}
+
+.loa-layout .portal-card-body {
+  padding: 0
+}
+
 .loa-entry {
-  padding: 14px 0;
-  border-bottom: 1px solid var(--line)
+  position: relative;
+  padding: 12px 13px 11px;
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+  transition:
+    background-color .12s ease,
+    border-color .12s ease
+}
+
+.loa-entry:hover {
+  background: #fbfcfd
 }
 
 .loa-entry:last-child {
   border-bottom: 0
 }
 
+.loa-entry::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background: transparent
+}
+
+.loa-entry:has(.status-pill.pending)::before {
+  background: #b89a36
+}
+
+.loa-entry:has(.status-pill.approved)::before {
+  background: #53745b
+}
+
+.loa-entry:has(.status-pill.denied)::before,
+.loa-entry:has(.status-pill.declined)::before {
+  background: #875050
+}
+
+.loa-entry:has(.status-pill.withdrawn)::before {
+  background: #7d858c
+}
+
 .loa-entry-head {
+  min-width: 0;
   display: flex;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 16px
+  gap: 14px
+}
+
+.loa-entry-head > div:first-child,
+.loa-entry-head > strong:first-child {
+  min-width: 0
+}
+
+.loa-entry-head strong {
+  display: block;
+  min-width: 0;
+  color: #21384b;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.3
 }
 
 .loa-entry-meta {
-  margin-top: 4px;
+  margin-top: 3px;
   color: var(--ink-500);
-  font-size: 10px
+  font-size: 8px;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: .055em;
+  text-transform: uppercase
 }
 
 .loa-entry-copy {
-  margin-top: 9px;
-  font-size: 11px;
-  line-height: 1.55
+  margin-top: 8px;
+  padding-top: 7px;
+  border-top: 1px solid #edf0f2;
+  color: #414c55;
+  font-size: 10px;
+  line-height: 1.5
+}
+
+.loa-entry-copy br:first-child {
+  display: none
+}
+
+.loa-entry .status-pill {
+  flex: 0 0 auto;
+  min-width: 67px;
+  padding: 4px 7px;
+  border-radius: 0;
+  font-size: 7px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: .065em;
+  text-align: center;
+  text-transform: uppercase
+}
+
+.loa-entry .status-pill.pending {
+  background: #fff9e7;
+  border-color: #d6c078;
+  color: #6d5917
+}
+
+.loa-entry .status-pill.approved {
+  background: #edf5ef;
+  border-color: #b9cdbc;
+  color: #36563d
+}
+
+.loa-entry .status-pill.denied,
+.loa-entry .status-pill.declined {
+  background: #f8eeee;
+  border-color: #d7b9b9;
+  color: #743f3f
+}
+
+.loa-entry .status-pill.withdrawn {
+  background: #f0f2f3;
+  border-color: #c9ced2;
+  color: #626b72
+}
+
+.loa-entry .portal-notice {
+  margin-top: 8px !important;
+  padding: 7px 8px;
+  background: #f6f8f9;
+  border: 1px solid #dce1e5;
+  color: #56616a;
+  font-size: 9px;
+  line-height: 1.45
+}
+
+.loa-entry > .secondary-button,
+.loa-entry > .primary-button {
+  min-height: 25px;
+  margin-top: 8px !important;
+  padding: 5px 9px;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .03em
+}
+
+.loa-entry > .secondary-button {
+  background: #f5f6f7;
+  border-color: #c6cdd3;
+  color: #45515c
+}
+
+.loa-entry > .secondary-button:hover {
+  background: #e9edf0;
+  border-color: #aeb7bf
+}
+
+.loa-entry > .primary-button {
+  background: var(--navy-900);
+  border-color: var(--navy-900)
+}
+
+.loa-layout .empty-state {
+  min-height: 92px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: #fbfcfd;
+  color: var(--ink-500);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .03em;
+  text-align: center
+}
+
+@media(max-width:900px) {
+  .loa-layout {
+    grid-template-columns: 1fr
+  }
+}
+
+@media(max-width:700px) {
+  .loa-entry-head {
+    flex-direction: row;
+    align-items: flex-start
+  }
+
+  .loa-entry {
+    padding: 11px
+  }
 }
 
 .portal-notice {
