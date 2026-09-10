@@ -3,84 +3,327 @@ import { supabase } from '../supabase-client.js';
 export { supabase };
 
 const navHost = document.querySelector('[data-portal-nav]');
-if (navHost) renderPortalNav(navHost.dataset.active || 'scheduling', navHost.dataset.appTabs === 'true');
 
-export function renderPortalNav(active='scheduling', appTabs=false) {
-  const host=document.querySelector('[data-portal-nav]');
-  if(!host) return;
-  const root=relativePortalRoot();
-  const link=(key,label,path)=>`<a class="tab${active===key?' active':''}" href="${root}${path}">${label}</a>`;
-  host.outerHTML=`<nav class="tabs" aria-label="Portal sections"><div class="tabs-inner">${
-    appTabs
-      ? `<button class="tab active" data-tab="schedule" type="button">Scheduling</button><button class="tab" data-tab="qualifications" type="button">Qualifications</button><button class="tab" data-tab="attendance" type="button">Attendance</button>`
-      : link('scheduling','Scheduling','app/')
-  }${link('orbat','ORBAT','orbat/')}${link('loa','LOA','loa/')}${link('profile','Profile','profile/')}${link('admin','Admin','admin/')}${appTabs?'<button class="tab" data-tab="personnel" id="personnel-tab-button" type="button" hidden>Personnel</button>':''}</div></nav>`;
+if (navHost) {
+    renderPortalNav(
+        navHost.dataset.active || 'scheduling',
+        navHost.dataset.appTabs === 'true'
+    );
 }
 
-function relativePortalRoot(){
-  const path=location.pathname.replace(/\\/g,'/');
-  const marker='/portal/';
-  const i=path.toLowerCase().indexOf(marker);
-  if(i<0) return '../portal/';
-  const tail=path.slice(i+marker.length).split('/').filter(Boolean);
-  return tail.length ? '../' : './';
+export function renderPortalNav(
+    active = 'scheduling',
+    appTabs = false
+) {
+    const host = document.querySelector('[data-portal-nav]');
+
+    if (!host) {
+        return;
+    }
+
+    const root = relativePortalRoot();
+
+    const link = (
+        key,
+        label,
+        href
+    ) => `
+        <a
+            class="tab${active === key ? ' active' : ''}"
+            href="${href}"
+        >
+            ${label}
+        </a>
+    `;
+
+    const button = (
+        key,
+        label,
+        tab
+    ) => `
+        <button
+            class="tab${active === key ? ' active' : ''}"
+            data-tab="${tab}"
+            type="button"
+        >
+            ${label}
+        </button>
+    `;
+
+    let navigation = '';
+
+    if (appTabs) {
+        navigation += button(
+            'scheduling',
+            'Scheduling',
+            'schedule'
+        );
+
+        navigation += button(
+            'qualifications',
+            'Qualifications',
+            'qualifications'
+        );
+
+        navigation += button(
+            'attendance',
+            'Attendance',
+            'attendance'
+        );
+    } else {
+        navigation += link(
+            'scheduling',
+            'Scheduling',
+            `${root}app/?tab=schedule`
+        );
+
+        navigation += link(
+            'qualifications',
+            'Qualifications',
+            `${root}app/?tab=qualifications`
+        );
+
+        navigation += link(
+            'attendance',
+            'Attendance',
+            `${root}app/?tab=attendance`
+        );
+    }
+
+    navigation += link(
+        'orbat',
+        'ORBAT',
+        `${root}orbat/`
+    );
+
+    navigation += link(
+        'loa',
+        'LOA',
+        `${root}loa/`
+    );
+
+    navigation += link(
+        'profile',
+        'Profile',
+        `${root}profile/`
+    );
+
+    navigation += link(
+        'admin',
+        'Admin',
+        `${root}admin/`
+    );
+
+    if (appTabs) {
+        navigation += `
+            <button
+                class="tab"
+                data-tab="personnel"
+                id="personnel-tab-button"
+                type="button"
+                hidden
+            >
+                Personnel
+            </button>
+        `;
+    }
+
+    host.outerHTML = `
+        <nav class="tabs" aria-label="Portal sections">
+            <div class="tabs-inner">
+                ${navigation}
+            </div>
+        </nav>
+    `;
 }
 
-export async function requireSession({ admin = false } = {}) {
-  const { data: { session }, error } = await supabase.auth.getSession();
-  if (error || !session?.user) {
-    location.replace('../../login/');
-    throw new Error('No authenticated session');
-  }
-  const { data: account, error: accountError } = await supabase.from('accounts').select('*').eq('id', session.user.id).single();
-  if (accountError || !account || account.account_status !== 'active') {
-    await supabase.auth.signOut();
-    location.replace('../../login/');
-    throw new Error('Account unavailable');
-  }
-  if (admin && !account.is_admin) {
-    location.replace('../app/');
-    throw new Error('Administrator access required');
-  }
-  renderIdentity(account);
-  bindLogout();
-  return { session, account };
+function relativePortalRoot() {
+    const path = location.pathname.replace(/\\/g, '/');
+
+    const marker = '/portal/';
+    const index = path.toLowerCase().indexOf(marker);
+
+    if (index < 0) {
+        return './portal/';
+    }
+
+    const tail = path
+        .slice(index + marker.length)
+        .split('/')
+        .filter(Boolean);
+
+    return tail.length
+        ? '../'
+        : './';
 }
 
-export function displayName(a) {
-  return a?.display_name || [a?.fictional_first_name, a?.fictional_last_name].filter(Boolean).join(' ') || a?.callsign || a?.email || 'Unknown';
+export async function requireSession({
+    admin = false
+} = {}) {
+    const {
+        data: { session },
+        error
+    } = await supabase.auth.getSession();
+
+    if (
+        error ||
+        !session?.user
+    ) {
+        location.replace('../../login/');
+
+        throw new Error(
+            'No authenticated session'
+        );
+    }
+
+    const {
+        data: account,
+        error: accountError
+    } = await supabase
+        .from('accounts')
+        .select('*')
+        .eq('id', session.user.id)
+        .single();
+
+    if (
+        accountError ||
+        !account ||
+        account.account_status !== 'active'
+    ) {
+        await supabase.auth.signOut();
+
+        location.replace('../../login/');
+
+        throw new Error(
+            'Account unavailable'
+        );
+    }
+
+    if (
+        admin &&
+        !account.is_admin
+    ) {
+        location.replace('../app/');
+
+        throw new Error(
+            'Administrator access required'
+        );
+    }
+
+    renderIdentity(account);
+    bindLogout();
+
+    return {
+        session,
+        account
+    };
 }
 
-export function rankFor(a) {
-  if (a?.branch === 'Navy') return a.navy_rank || 'Unassigned';
-  if (a?.branch === 'Army') return a.army_rank || 'Unassigned';
-  if (a?.branch === 'Air Force') return a.air_force_rank || 'Unassigned';
-  return 'Unassigned';
+export function displayName(account) {
+    return (
+        account?.display_name ||
+        [
+            account?.fictional_first_name,
+            account?.fictional_last_name
+        ]
+            .filter(Boolean)
+            .join(' ') ||
+        account?.callsign ||
+        account?.email ||
+        'Unknown'
+    );
 }
 
-export function formatDate(v) {
-  if (!v) return '—';
-  return new Date(`${v}T00:00:00`).toLocaleDateString();
+export function rankFor(account) {
+    if (account?.branch === 'Navy') {
+        return account.navy_rank || 'Unassigned';
+    }
+
+    if (account?.branch === 'Army') {
+        return account.army_rank || 'Unassigned';
+    }
+
+    if (account?.branch === 'Air Force') {
+        return account.air_force_rank || 'Unassigned';
+    }
+
+    return 'Unassigned';
 }
 
-export function formatDateTime(v) {
-  if (!v) return '—';
-  return new Intl.DateTimeFormat(undefined,{dateStyle:'medium',timeStyle:'short'}).format(new Date(v));
+export function formatDate(value) {
+    if (!value) {
+        return '—';
+    }
+
+    return new Date(
+        `${value}T00:00:00`
+    ).toLocaleDateString();
+}
+
+export function formatDateTime(value) {
+    if (!value) {
+        return '—';
+    }
+
+    return new Intl.DateTimeFormat(
+        undefined,
+        {
+            dateStyle: 'medium',
+            timeStyle: 'short'
+        }
+    ).format(
+        new Date(value)
+    );
 }
 
 function renderIdentity(account) {
-  document.querySelectorAll('[data-identity-name]').forEach(el => el.textContent = `${displayName(account)}${account.callsign ? ` / ${account.callsign}` : ''}`);
-  document.querySelectorAll('[data-identity-meta]').forEach(el => el.textContent = `${account.branch || 'NSWC'} // ${rankFor(account)}`);
+    document
+        .querySelectorAll('[data-identity-name]')
+        .forEach(element => {
+            element.textContent =
+                `${displayName(account)}${
+                    account.callsign
+                        ? ` / ${account.callsign}`
+                        : ''
+                }`;
+        });
+
+    document
+        .querySelectorAll('[data-identity-meta]')
+        .forEach(element => {
+            element.textContent =
+                `${account.branch || 'NSWC'} // ${rankFor(account)}`;
+        });
 }
 
 function bindLogout() {
-  document.querySelectorAll('[data-logout]').forEach(btn => btn.addEventListener('click', async (e) => {
-    e.preventDefault();
-    await supabase.auth.signOut();
-    location.replace('../../login/');
-  }));
+    document
+        .querySelectorAll('[data-logout]')
+        .forEach(button => {
+            button.addEventListener(
+                'click',
+                async event => {
+                    event.preventDefault();
+
+                    await supabase.auth.signOut();
+
+                    location.replace(
+                        '../../login/'
+                    );
+                }
+            );
+        });
 }
 
-export function esc(s='') {
-  return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+export function esc(value = '') {
+    return String(value).replace(
+        /[&<>'"]/g,
+        character => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            "'": '&#39;',
+            '"': '&quot;'
+        })[character]
+    );
 }

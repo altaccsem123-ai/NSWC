@@ -77,16 +77,70 @@ document.querySelectorAll('[data-close-dialog]').forEach((button) => {
   button.addEventListener('click', () => closeDialog(button.dataset.closeDialog));
 });
 
-document.querySelectorAll('.tab').forEach((button) => {
-  button.addEventListener('click', () => {
-    document.querySelectorAll('button.tab[data-tab]').forEach((b) => b.classList.remove('active'));
-    document.querySelectorAll('.panel').forEach((p) => p.classList.remove('active'));
-    button.classList.add('active');
-    $(`tab-${button.dataset.tab}`)?.classList.add('active');
-    if (button.dataset.tab === 'qualifications') loadQualificationsView();
-    if (button.dataset.tab === 'attendance') loadAttendance();
-  });
-});
+function activatePortalTab(tab) {
+    const allowed = [
+        'schedule',
+        'qualifications',
+        'attendance',
+        'personnel'
+    ];
+
+    if (!allowed.includes(tab)) {
+        tab = 'schedule';
+    }
+
+    document
+        .querySelectorAll('button.tab[data-tab]')
+        .forEach(button => {
+            button.classList.toggle(
+                'active',
+                button.dataset.tab === tab
+            );
+        });
+
+    document
+        .querySelectorAll('.panel')
+        .forEach(panel => {
+            panel.classList.remove('active');
+        });
+
+    $(`tab-${tab}`)?.classList.add('active');
+
+    if (tab === 'qualifications') {
+        loadQualificationsView();
+    }
+
+    if (tab === 'attendance') {
+        loadAttendance();
+    }
+
+    const url = new URL(window.location.href);
+
+    if (tab === 'schedule') {
+        url.searchParams.delete('tab');
+    } else {
+        url.searchParams.set('tab', tab);
+    }
+
+    history.replaceState(
+        null,
+        '',
+        url
+    );
+}
+
+document
+    .querySelectorAll('button.tab[data-tab]')
+    .forEach(button => {
+        button.addEventListener(
+            'click',
+            () => {
+                activatePortalTab(
+                    button.dataset.tab
+                );
+            }
+        );
+    });
 
 async function bootstrap() {
   const { data: { session }, error: sessionError } = await supabase.auth.getSession();
@@ -687,3 +741,15 @@ bootstrap().catch(async (error) => {
   console.error(error);
   gate.textContent = `Portal initialization failed: ${error.message}`;
 });
+
+const requestedTab =
+    new URLSearchParams(
+        window.location.search
+    ).get('tab');
+
+if (
+    requestedTab === 'qualifications' ||
+    requestedTab === 'attendance'
+) {
+    activatePortalTab(requestedTab);
+}
