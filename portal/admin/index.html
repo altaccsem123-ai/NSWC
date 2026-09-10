@@ -1,1 +1,279 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>NSWC Admin</title><link rel="icon" type="image/png" href="../../images/nsw_logo.png"><link rel="stylesheet" href="../../assets/css/portal.css"></head><body><header class="topbar"><div class="topbar-inner"><a class="brand" href="../../"><img src="../../images/nsw_logo.png" alt="NSWC emblem"><div><strong>NAVAL SPECIAL WARFARE COMMAND</strong><span>Personnel Management System // 2012</span></div></a><div class="identity"><div><strong data-identity-name>Personnel</strong><span data-identity-meta>Authenticated Session</span></div><button type="button" data-logout>Sign Out</button></div></div></header><div data-portal-nav data-active="admin"></div><main class="shell"><div class="page-head"><div><p class="eyebrow">Restricted Administration</p><h1>Personnel Administration</h1><p class="subcopy">Administrator-only account, assignment, branch and access management.</p></div><input id="search" class="portal-search" type="search" placeholder="Search personnel..."></div><section class="content-card"><div class="card-head"><strong>Personnel Directory</strong></div><div class="table-wrap"><table class="data-table"><thead><tr><th>Member</th><th>Callsign</th><th>Branch / Rank</th><th>Assignment</th><th>Leadership</th><th>Status</th><th></th></tr></thead><tbody id="rows"></tbody></table></div></section></main><dialog id="edit" class="modal"><form id="edit-form"><div class="modal-frame"><div class="modal-head"><div><p class="eyebrow">Personnel Administration</p><h2>Edit Personnel Record</h2></div></div><div class="modal-body form-grid admin-grid"><label><span>First name</span><input name="first"></label><label><span>Last name</span><input name="last"></label><label><span>Callsign</span><select name="callsign"></select></label><label><span>Branch</span><select name="branch"><option value="">Unassigned</option><option>Navy</option><option>Army</option><option>Air Force</option></select></label><label><span>Navy rank</span><input name="navy_rank"></label><label><span>Army rank</span><input name="army_rank"></label><label><span>Air Force rank</span><input name="air_force_rank"></label><label><span>Billet</span><input name="billet"></label><label><span>Position title</span><input name="position_title"></label><label><span>Team</span><input name="team"></label><label><span>Squadron</span><input name="squadron"></label><label><span>Troop</span><input name="troop"></label><label><span>Leadership</span><select name="leadership"><option>Member</option><option>Team Leader</option><option>HQ</option></select></label><label><span>Account status</span><select name="status"><option>active</option><option>inactive</option><option>suspended</option><option>retired</option></select></label><fieldset class="access-field"><legend>Access</legend><label><input type="checkbox" name="admin"> Administrator</label><label><input type="checkbox" name="cadre"> Cadre</label><label><input type="checkbox" name="candidate"> Candidate</label></fieldset><div id="message" class="form-message error form-full"></div></div><div class="modal-actions"><div></div><div class="modal-actions-right"><button type="button" class="secondary-button" id="cancel">Cancel</button><button class="primary-button">Save Changes</button></div></div></div></form></dialog><script type="module" src="../../assets/js/portal/admin.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="robots" content="noindex,nofollow">
+
+    <title>NSWC Admin</title>
+
+    <link rel="icon" type="image/png" href="../../images/nsw_logo.png">
+    <link rel="stylesheet" href="../../assets/css/portal.css">
+</head>
+
+<body>
+
+<header class="topbar">
+    <div class="topbar-inner">
+
+        <a class="brand" href="../../">
+            <img src="../../images/nsw_logo.png" alt="NSWC emblem">
+
+            <div>
+                <strong>NAVAL SPECIAL WARFARE COMMAND</strong>
+                <span>Personnel Management System // 2012</span>
+            </div>
+        </a>
+
+        <div class="identity">
+            <div>
+                <strong data-identity-name>Personnel</strong>
+                <span data-identity-meta>Authenticated Session</span>
+            </div>
+
+            <button type="button" data-logout>Sign Out</button>
+        </div>
+
+    </div>
+</header>
+
+<div data-portal-nav data-active="admin"></div>
+
+<main class="shell">
+
+    <div class="page-head">
+
+        <div>
+            <p class="eyebrow">Restricted Administration</p>
+
+            <h1>Personnel Administration</h1>
+
+            <p class="subcopy">
+                Personnel assignment, ORBAT position and access management.
+            </p>
+        </div>
+
+        <input
+            id="search"
+            class="portal-search"
+            type="search"
+            placeholder="Search personnel..."
+        >
+
+    </div>
+
+    <section class="content-card">
+
+        <div class="card-head">
+            <strong>Personnel Directory</strong>
+        </div>
+
+        <div class="table-wrap">
+
+            <table class="data-table">
+
+                <thead>
+                    <tr>
+                        <th>Member</th>
+                        <th>Callsign</th>
+                        <th>Branch / Rank</th>
+                        <th>Assignment</th>
+                        <th>Leadership</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody id="rows"></tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+
+<dialog id="edit" class="modal">
+
+    <form id="edit-form">
+
+        <div class="modal-frame">
+
+            <div class="modal-head">
+
+                <div>
+                    <p class="eyebrow">Personnel Administration</p>
+                    <h2>Edit Personnel Record</h2>
+                </div>
+
+            </div>
+
+            <div class="modal-body form-grid admin-grid">
+
+                <label>
+                    <span>First name</span>
+                    <input name="first" readonly>
+                </label>
+
+                <label>
+                    <span>Last name</span>
+                    <input name="last" readonly>
+                </label>
+
+                <label class="form-full">
+                    <span>Email</span>
+                    <input name="email" readonly>
+                </label>
+
+                <label>
+                    <span>Callsign / ORBAT Position</span>
+
+                    <select name="callsign">
+                        <option value="">Unassigned</option>
+                    </select>
+                </label>
+
+                <label>
+                    <span>Branch</span>
+
+                    <select name="branch" disabled>
+                        <option value="">Unassigned</option>
+                        <option value="Navy">Navy</option>
+                        <option value="Army">Army</option>
+                        <option value="Air Force">Air Force</option>
+                    </select>
+                </label>
+
+                <label id="rank-field">
+                    <span id="rank-label">Rank</span>
+
+                    <select name="rank">
+                        <option value="">Unassigned</option>
+                    </select>
+                </label>
+
+                <label>
+                    <span>Team</span>
+
+                    <select name="team" disabled>
+                        <option value="">Unassigned</option>
+                    </select>
+                </label>
+
+                <label>
+                    <span>Billet</span>
+
+                    <select name="billet" disabled>
+                        <option value="">Unassigned</option>
+                    </select>
+                </label>
+
+                <label>
+                    <span>Squadron</span>
+
+                    <select name="squadron" disabled>
+                        <option value="">Unassigned</option>
+                        <option value="Red Squadron">Red Squadron</option>
+                    </select>
+                </label>
+
+                <label>
+                    <span>Troop</span>
+
+                    <select name="troop" disabled>
+                        <option value="">Unassigned</option>
+                        <option value="3 Troop">3 Troop</option>
+                    </select>
+                </label>
+
+                <label>
+                    <span>Leadership</span>
+
+                    <select name="leadership">
+                        <option value="Member">Member</option>
+                        <option value="Team Leader">Team Leader</option>
+                        <option value="HQ">HQ</option>
+                    </select>
+                </label>
+
+                <label>
+                    <span>Account Status</span>
+
+                    <select name="status">
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                        <option value="suspended">Suspended</option>
+                        <option value="retired">Retired</option>
+                    </select>
+                </label>
+
+                <label>
+                    <span>Administrator</span>
+
+                    <select name="admin">
+                        <option value="false">No</option>
+                        <option value="true">Yes</option>
+                    </select>
+                </label>
+
+                <label>
+                    <span>Cadre</span>
+
+                    <select name="cadre">
+                        <option value="false">No</option>
+                        <option value="true">Yes</option>
+                    </select>
+                </label>
+
+                <label>
+                    <span>Candidate</span>
+
+                    <select name="candidate">
+                        <option value="false">No</option>
+                        <option value="true">Yes</option>
+                    </select>
+                </label>
+
+                <div
+                    id="message"
+                    class="form-message error form-full"
+                ></div>
+
+            </div>
+
+            <div class="modal-actions">
+
+                <div></div>
+
+                <div class="modal-actions-right">
+
+                    <button
+                        type="button"
+                        class="secondary-button"
+                        id="cancel"
+                    >
+                        Cancel
+                    </button>
+
+                    <button class="primary-button">
+                        Save Changes
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</dialog>
+
+<script
+    type="module"
+    src="../../assets/js/portal/admin.js"
+></script>
+
+</body>
+</html>
