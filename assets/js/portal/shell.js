@@ -1,6 +1,30 @@
-import { supabase } from '../../assets/js/supabase-client.js';
+import { supabase } from '../supabase-client.js';
 
 export { supabase };
+
+const navHost = document.querySelector('[data-portal-nav]');
+if (navHost) renderPortalNav(navHost.dataset.active || 'scheduling', navHost.dataset.appTabs === 'true');
+
+export function renderPortalNav(active='scheduling', appTabs=false) {
+  const host=document.querySelector('[data-portal-nav]');
+  if(!host) return;
+  const root=relativePortalRoot();
+  const link=(key,label,path)=>`<a class="tab${active===key?' active':''}" href="${root}${path}">${label}</a>`;
+  host.outerHTML=`<nav class="tabs" aria-label="Portal sections"><div class="tabs-inner">${
+    appTabs
+      ? `<button class="tab active" data-tab="schedule" type="button">Scheduling</button><button class="tab" data-tab="qualifications" type="button">Qualifications</button><button class="tab" data-tab="attendance" type="button">Attendance</button>`
+      : link('scheduling','Scheduling','app/')
+  }${link('orbat','ORBAT','orbat/')}${link('loa','LOA','loa/')}${link('profile','Profile','profile/')}${link('admin','Admin','admin/')}${appTabs?'<button class="tab" data-tab="personnel" id="personnel-tab-button" type="button" hidden>Personnel</button>':''}</div></nav>`;
+}
+
+function relativePortalRoot(){
+  const path=location.pathname.replace(/\\/g,'/');
+  const marker='/portal/';
+  const i=path.toLowerCase().indexOf(marker);
+  if(i<0) return '../portal/';
+  const tail=path.slice(i+marker.length).split('/').filter(Boolean);
+  return tail.length ? '../' : './';
+}
 
 export async function requireSession({ admin = false } = {}) {
   const { data: { session }, error } = await supabase.auth.getSession();
@@ -24,7 +48,7 @@ export async function requireSession({ admin = false } = {}) {
 }
 
 export function displayName(a) {
-  return [a?.fictional_first_name, a?.fictional_last_name].filter(Boolean).join(' ') || a?.callsign || a?.email || 'Unknown';
+  return a?.display_name || [a?.fictional_first_name, a?.fictional_last_name].filter(Boolean).join(' ') || a?.callsign || a?.email || 'Unknown';
 }
 
 export function rankFor(a) {
@@ -50,7 +74,8 @@ function renderIdentity(account) {
 }
 
 function bindLogout() {
-  document.querySelectorAll('[data-logout]').forEach(btn => btn.addEventListener('click', async () => {
+  document.querySelectorAll('[data-logout]').forEach(btn => btn.addEventListener('click', async (e) => {
+    e.preventDefault();
     await supabase.auth.signOut();
     location.replace('../../login/');
   }));

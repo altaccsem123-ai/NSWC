@@ -6,8 +6,7 @@
   <meta name="robots" content="noindex,nofollow">
   <title>NSWC Personnel Portal</title>
   <link rel="icon" type="image/png" href="../../images/nsw_logo.png">
-  <link rel="stylesheet" href="portal.css">
-  <link rel="stylesheet" href="portal-hotfix.css">
+  <link rel="stylesheet" href="../../assets/css/portal.css">
 </head>
 <body>
   <div id="gate" class="gate">Validating personnel session...</div>
@@ -32,47 +31,7 @@
       </div>
     </header>
 
-<nav class="tabs" aria-label="Portal sections">
-    <div class="tabs-inner">
-        <button class="tab active" data-tab="schedule" type="button">
-            Scheduling
-        </button>
-
-        <button class="tab" data-tab="qualifications" type="button">
-            Qualifications
-        </button>
-
-        <button class="tab" data-tab="attendance" type="button">
-            Attendance
-        </button>
-
-        <a class="tab" href="../orbat/">
-            ORBAT
-        </a>
-
-        <a class="tab" href="../loa/">
-            LOA
-        </a>
-
-        <a class="tab" href="../profile/">
-            Profile
-        </a>
-
-        <a class="tab" href="../admin/">
-            Admin
-        </a>
-
-        <button
-            class="tab"
-            data-tab="personnel"
-            id="personnel-tab-button"
-            type="button"
-            hidden
-        >
-            Personnel
-        </button>
-    </div>
-</nav>
+<div data-portal-nav data-active="scheduling" data-app-tabs="true"></div>
 
     <main class="shell">
       <section class="panel active" id="tab-schedule">
@@ -411,6 +370,6 @@
     </form>
   </dialog>
 
-  <script type="module" src="portal.js"></script>
+  <script type="module" src="../../assets/js/portal/app.js"></script>
 </body>
 </html>
