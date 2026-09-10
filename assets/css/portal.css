@@ -1461,3 +1461,474 @@ button:disabled {
     max-width: none
   }
 }
+
+/* =========================================================
+   SCHEDULING
+   COMPACT SESSION BOARD
+   ========================================================= */
+
+#session-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  align-items: stretch;
+}
+
+
+/* ---------------------------------------------------------
+   SESSION CARD
+   --------------------------------------------------------- */
+
+.session-card {
+  position: relative;
+  min-width: 0;
+  min-height: 112px;
+
+  display: grid;
+  grid-template-columns: 78px minmax(0, 1fr) 128px;
+  align-items: stretch;
+
+  overflow: hidden;
+
+  background: #ffffff;
+  border: 1px solid #d8dee6;
+
+  box-shadow: none;
+
+  cursor: pointer;
+
+  transition:
+    border-color .14s ease,
+    background-color .14s ease,
+    transform .14s ease;
+}
+
+.session-card:hover {
+  border-color: #7d8a98;
+  background: #fbfcfd;
+  transform: translateY(-1px);
+}
+
+.session-card:focus-visible {
+  outline: 2px solid #0b2d4d;
+  outline-offset: 2px;
+}
+
+
+/* small navy top marker */
+
+.session-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+
+  background: #102c46;
+}
+
+
+/* ---------------------------------------------------------
+   DATE / TIME COLUMN
+   --------------------------------------------------------- */
+
+.session-date {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 12px 8px 10px;
+
+  background: #f4f6f8;
+  border-right: 1px solid #d8dee6;
+
+  text-align: center;
+}
+
+.session-date strong {
+  display: block;
+
+  margin: 0;
+
+  color: #102c46;
+
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.1;
+
+  letter-spacing: -.01em;
+}
+
+.session-date span {
+  display: block;
+
+  margin-top: 6px;
+
+  color: #637180;
+
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1.25;
+
+  letter-spacing: .025em;
+}
+
+
+/* ---------------------------------------------------------
+   MAIN SESSION INFORMATION
+   --------------------------------------------------------- */
+
+.session-main {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  padding: 12px 12px 11px;
+}
+
+.session-main h3 {
+  margin: 0;
+
+  overflow: hidden;
+
+  color: #172b3f;
+
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.25;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.session-main p {
+  display: -webkit-box;
+
+  margin: 5px 0 0;
+
+  overflow: hidden;
+
+  color: #667482;
+
+  font-size: 9px;
+  font-weight: 400;
+  line-height: 1.4;
+
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.session-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  gap: 4px;
+
+  margin-top: 8px;
+}
+
+
+/* ---------------------------------------------------------
+   TAGS
+   --------------------------------------------------------- */
+
+.session-tags .tag {
+  min-height: 18px;
+
+  display: inline-flex;
+  align-items: center;
+
+  padding: 2px 6px;
+
+  background: #f5f7f9;
+  border: 1px solid #d7dde4;
+
+  color: #526170;
+
+  font-size: 7px;
+  font-weight: 700;
+  line-height: 1;
+
+  letter-spacing: .035em;
+  text-transform: uppercase;
+
+  white-space: nowrap;
+}
+
+
+/* official training */
+
+.session-tags .tag.official {
+  background: #edf3f8;
+  border-color: #b8c9d8;
+
+  color: #183a59;
+}
+
+
+/* green team */
+
+.session-tags .tag.green {
+  background: #eff5f0;
+  border-color: #c1d2c5;
+
+  color: #35553c;
+}
+
+
+/* mandatory */
+
+.session-tags .tag.mandatory {
+  background: #fff8e8;
+  border-color: #d8bf84;
+
+  color: #765817;
+}
+
+
+/* scheduled */
+
+.session-tags .tag.scheduled {
+  background: #eef4f8;
+  border-color: #c0d0dc;
+
+  color: #31536c;
+}
+
+
+/* completed */
+
+.session-tags .tag.completed {
+  background: #edf5ee;
+  border-color: #bdd0c0;
+
+  color: #35563b;
+}
+
+
+/* postponed */
+
+.session-tags .tag.postponed {
+  background: #fff7e8;
+  border-color: #d8c18c;
+
+  color: #76591b;
+}
+
+
+/* cancelled */
+
+.session-tags .tag.cancelled {
+  background: #f8eeee;
+  border-color: #d6bebe;
+
+  color: #754141;
+}
+
+
+/* ---------------------------------------------------------
+   RIGHT SIDE
+   HOST + RESPONSE
+   --------------------------------------------------------- */
+
+.session-side {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+
+  gap: 7px;
+
+  padding: 11px 10px;
+
+  background: #fafbfc;
+  border-left: 1px solid #d8dee6;
+}
+
+
+/* host */
+
+.session-side > .tag {
+  min-width: 0;
+
+  display: block;
+
+  overflow: hidden;
+
+  padding: 0;
+
+  background: transparent;
+  border: 0;
+
+  color: #62707e;
+
+  font-size: 8px;
+  font-weight: 600;
+  line-height: 1.3;
+
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* ---------------------------------------------------------
+   RESPONSE STATUS
+   --------------------------------------------------------- */
+
+.response-pill {
+  width: 100%;
+  min-height: 26px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 5px 7px;
+
+  background: #f1f3f5;
+  border: 1px solid #d5dbe1;
+
+  color: #66727e;
+
+  font-size: 8px;
+  font-weight: 700;
+  line-height: 1;
+
+  letter-spacing: .035em;
+  text-transform: uppercase;
+
+  white-space: nowrap;
+}
+
+
+/* attending */
+
+.response-pill.attending {
+  background: #edf6ef;
+  border-color: #b9cfbf;
+
+  color: #31583a;
+}
+
+
+/* tentative */
+
+.response-pill.tentative {
+  background: #fff8e8;
+  border-color: #d9c18b;
+
+  color: #76591b;
+}
+
+
+/* not attending */
+
+.response-pill.not_attending {
+  background: #f8eeee;
+  border-color: #d7bcbc;
+
+  color: #754141;
+}
+
+
+/* ---------------------------------------------------------
+   SCHEDULE STATUS / FILTER AREA
+   --------------------------------------------------------- */
+
+#schedule-status {
+  margin: 0;
+
+  color: #667482;
+
+  font-size: 9px;
+  font-weight: 500;
+}
+
+
+/* ---------------------------------------------------------
+   DENSITY
+   --------------------------------------------------------- */
+
+#session-list .session-card + .session-card {
+  margin-top: 0;
+}
+
+
+/* ---------------------------------------------------------
+   RESPONSIVE
+   --------------------------------------------------------- */
+
+@media (max-width: 1180px) {
+  #session-list {
+    grid-template-columns: 1fr;
+  }
+
+  .session-card {
+    grid-template-columns: 82px minmax(0, 1fr) 140px;
+  }
+}
+
+@media (max-width: 700px) {
+  #session-list {
+    grid-template-columns: 1fr;
+  }
+
+  .session-card {
+    grid-template-columns: 70px minmax(0, 1fr);
+  }
+
+  .session-side {
+    grid-column: 1 / -1;
+
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 7px 9px;
+
+    border-top: 1px solid #d8dee6;
+    border-left: 0;
+  }
+
+  .session-side > .tag {
+    text-align: left;
+  }
+
+  .response-pill {
+    width: auto;
+    min-width: 110px;
+  }
+}
+
+@media (max-width: 480px) {
+  .session-card {
+    grid-template-columns: 64px minmax(0, 1fr);
+  }
+
+  .session-main {
+    padding: 10px;
+  }
+
+  .session-date {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+
+  .session-tags {
+    gap: 3px;
+  }
+
+  .session-tags .tag {
+    font-size: 6.5px;
+  }
+}
