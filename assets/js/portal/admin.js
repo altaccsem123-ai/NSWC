@@ -106,7 +106,7 @@ function getBranchFromEmail(email) {
 }
 
 function getRank(person) {
-    const branch = getBranchFromEmail(person.email);
+    const branch = person.branch || '';
 
     if (branch === 'Navy') {
         return person.navy_rank || '';
@@ -219,7 +219,7 @@ function populateRankDropdown(branch, selectedRank = '') {
 }
 
 function updateBranchAndRank(person) {
-    const branch = getBranchFromEmail(person.email);
+    const branch = person.branch || '';
 
     form.elements.branch.value = branch;
 
@@ -354,7 +354,7 @@ function render() {
     });
 
     for (const person of filtered) {
-        const branch = getBranchFromEmail(person.email);
+        const branch = person.branch || '';
         const personRank = getRank(person);
 
         const name = [

@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -13,90 +14,102 @@
 
 <body>
 
-<header class="topbar">
-    <div class="topbar-inner">
+    <header class="topbar">
+        <div class="topbar-inner">
 
-        <a class="brand" href="../../">
-            <img src="../../images/nsw_logo.png" alt="NSWC emblem">
+            <a class="brand" href="../../">
+                <img src="../../images/nsw_logo.png" alt="NSWC emblem">
+
+                <div>
+                    <strong>NAVAL SPECIAL WARFARE COMMAND</strong>
+                    <span>Personnel Management System // 2012</span>
+                </div>
+            </a>
+
+            <div class="identity">
+                <div>
+                    <strong data-identity-name>Personnel</strong>
+                    <span data-identity-meta>Authenticated Session</span>
+                </div>
+
+                <button type="button" data-logout>Sign Out</button>
+            </div>
+
+        </div>
+    </header>
+
+    <div data-portal-nav data-active="admin"></div>
+
+    <main class="shell">
+
+        <div class="page-head">
 
             <div>
-                <strong>NAVAL SPECIAL WARFARE COMMAND</strong>
-                <span>Personnel Management System // 2012</span>
-            </div>
-        </a>
+                <p class="eyebrow">Restricted Administration</p>
 
-        <div class="identity">
-            <div>
-                <strong data-identity-name>Personnel</strong>
-                <span data-identity-meta>Authenticated Session</span>
+                <h1>Personnel Administration</h1>
+
+                <p class="subcopy">
+                    Personnel assignment, ORBAT position and access management.
+                </p>
             </div>
 
-            <button type="button" data-logout>Sign Out</button>
-        </div>
+            <div class="admin-head-actions">
 
-    </div>
-</header>
+                <input
+                    id="search"
+                    class="portal-search"
+                    type="search"
+                    placeholder="Search personnel..."
+                >
 
-<div data-portal-nav data-active="admin"></div>
+                <button
+                    id="create-account-button"
+                    class="primary-button"
+                    type="button"
+                >
+                    Create Account
+                </button>
 
-<main class="shell">
-
-    <div class="page-head">
-
-        <div>
-            <p class="eyebrow">Restricted Administration</p>
-
-            <h1>Personnel Administration</h1>
-
-            <p class="subcopy">
-                Personnel assignment, ORBAT position and access management.
-            </p>
-        </div>
-
-        <input
-            id="search"
-            class="portal-search"
-            type="search"
-            placeholder="Search personnel..."
-        >
-
-    </div>
-
-    <section class="content-card">
-
-        <div class="card-head">
-            <strong>Personnel Directory</strong>
-        </div>
-
-        <div class="table-wrap">
-
-            <table class="data-table">
-
-                <thead>
-                    <tr>
-                        <th>Member</th>
-                        <th>Callsign</th>
-                        <th>Branch / Rank</th>
-                        <th>Assignment</th>
-                        <th>Leadership</th>
-                        <th>Status</th>
-                        <th></th>
-                    </tr>
-                </thead>
-
-                <tbody id="rows"></tbody>
-
-            </table>
+            </div>
 
         </div>
 
-    </section>
+        <section class="content-card">
 
-</main>
+            <div class="card-head">
+                <strong>Personnel Directory</strong>
+            </div>
 
-<dialog id="edit" class="modal">
+            <div class="table-wrap">
 
-    <form id="edit-form">
+                <table class="data-table">
+
+                    <thead>
+                        <tr>
+                            <th>Member</th>
+                            <th>Callsign</th>
+                            <th>Branch / Rank</th>
+                            <th>Assignment</th>
+                            <th>Leadership</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="rows"></tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <dialog id="create-account" class="modal">
+
+    <form id="create-account-form">
 
         <div class="modal-frame">
 
@@ -104,140 +117,205 @@
 
                 <div>
                     <p class="eyebrow">Personnel Administration</p>
-                    <h2>Edit Personnel Record</h2>
+                    <h2>Create Personnel Account</h2>
                 </div>
 
             </div>
 
-            <div class="modal-body form-grid admin-grid">
+            <div class="modal-body">
 
-                <label>
-                    <span>First name</span>
-                    <input name="first" readonly>
-                </label>
+                <div class="admin-create-section">
 
-                <label>
-                    <span>Last name</span>
-                    <input name="last" readonly>
-                </label>
+                    <div class="admin-create-section-head">
+                        <strong>Authentication</strong>
+                        <span>Login credentials for the new member.</span>
+                    </div>
 
-                <label class="form-full">
-                    <span>Email</span>
-                    <input name="email" readonly>
-                </label>
+                    <div class="form-grid admin-grid">
 
-                <label>
-                    <span>Callsign / ORBAT Position</span>
+                        <label>
+                            <span>First Name</span>
+                            <input
+                                name="first"
+                                type="text"
+                                maxlength="80"
+                                required
+                            >
+                        </label>
 
-                    <select name="callsign">
-                        <option value="">Unassigned</option>
-                    </select>
-                </label>
+                        <label>
+                            <span>Last Name</span>
+                            <input
+                                name="last"
+                                type="text"
+                                maxlength="80"
+                                required
+                            >
+                        </label>
 
-                <label>
-                    <span>Branch</span>
+                        <label class="form-full">
+                            <span>Email</span>
+                            <input
+                                name="email"
+                                type="email"
+                                autocomplete="off"
+                                required
+                            >
+                        </label>
 
-                    <select name="branch" disabled>
-                        <option value="">Unassigned</option>
-                        <option value="Navy">Navy</option>
-                        <option value="Army">Army</option>
-                        <option value="Air Force">Air Force</option>
-                    </select>
-                </label>
+                        <label class="form-full">
+                            <span>Temporary Password</span>
+                            <input
+                                name="password"
+                                type="password"
+                                autocomplete="new-password"
+                                minlength="8"
+                                required
+                            >
+                        </label>
 
-                <label id="rank-field">
-                    <span id="rank-label">Rank</span>
+                    </div>
 
-                    <select name="rank">
-                        <option value="">Unassigned</option>
-                    </select>
-                </label>
+                </div>
 
-                <label>
-                    <span>Team</span>
+                <div class="admin-create-section">
 
-                    <select name="team" disabled>
-                        <option value="">Unassigned</option>
-                    </select>
-                </label>
+                    <div class="admin-create-section-head">
+                        <strong>Personnel Assignment</strong>
+                        <span>
+                            Branch, rank and operational assignment.
+                        </span>
+                    </div>
 
-                <label>
-                    <span>Billet</span>
+                    <div class="form-grid admin-grid">
 
-                    <select name="billet" disabled>
-                        <option value="">Unassigned</option>
-                    </select>
-                </label>
+                        <label>
+                            <span>Candidate</span>
 
-                <label>
-                    <span>Squadron</span>
+                            <select name="candidate">
+                                <option value="false">No</option>
+                                <option value="true">Yes</option>
+                            </select>
+                        </label>
 
-                    <select name="squadron" disabled>
-                        <option value="">Unassigned</option>
-                        <option value="Red Squadron">Red Squadron</option>
-                    </select>
-                </label>
+                        <label>
+                            <span>Branch</span>
 
-                <label>
-                    <span>Troop</span>
+                            <select name="branch">
+                                <option value="">Unassigned</option>
+                                <option value="Navy">Navy</option>
+                                <option value="Army">Army</option>
+                                <option value="Air Force">Air Force</option>
+                            </select>
+                        </label>
 
-                    <select name="troop" disabled>
-                        <option value="">Unassigned</option>
-                        <option value="3 Troop">3 Troop</option>
-                    </select>
-                </label>
+                        <label id="create-rank-field">
+                            <span id="create-rank-label">Rank</span>
 
-                <label>
-                    <span>Leadership</span>
+                            <select name="rank">
+                                <option value="">Unassigned</option>
+                            </select>
+                        </label>
 
-                    <select name="leadership">
-                        <option value="Member">Member</option>
-                        <option value="Team Leader">Team Leader</option>
-                        <option value="HQ">HQ</option>
-                    </select>
-                </label>
+                        <label>
+                            <span>Callsign / ORBAT Position</span>
 
-                <label>
-                    <span>Account Status</span>
+                            <select name="callsign">
+                                <option value="">Unassigned</option>
+                            </select>
+                        </label>
 
-                    <select name="status">
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
-                        <option value="suspended">Suspended</option>
-                        <option value="retired">Retired</option>
-                    </select>
-                </label>
+                        <label>
+                            <span>Team</span>
+                            <input name="team" readonly>
+                        </label>
 
-                <label>
-                    <span>Administrator</span>
+                        <label>
+                            <span>Billet</span>
+                            <input name="billet" readonly>
+                        </label>
 
-                    <select name="admin">
-                        <option value="false">No</option>
-                        <option value="true">Yes</option>
-                    </select>
-                </label>
+                        <label>
+                            <span>Squadron</span>
+                            <input name="squadron" readonly>
+                        </label>
 
-                <label>
-                    <span>Cadre</span>
+                        <label>
+                            <span>Troop</span>
+                            <input name="troop" readonly>
+                        </label>
 
-                    <select name="cadre">
-                        <option value="false">No</option>
-                        <option value="true">Yes</option>
-                    </select>
-                </label>
+                    </div>
 
-                <label>
-                    <span>Candidate</span>
+                </div>
 
-                    <select name="candidate">
-                        <option value="false">No</option>
-                        <option value="true">Yes</option>
-                    </select>
-                </label>
+                <div class="admin-create-section">
+
+                    <div class="admin-create-section-head">
+                        <strong>Account Authority</strong>
+                        <span>
+                            Portal access and leadership permissions.
+                        </span>
+                    </div>
+
+                    <div class="form-grid admin-grid">
+
+                        <label>
+                            <span>Leadership</span>
+
+                            <select name="leadership">
+                                <option value="Member">Member</option>
+                                <option value="Team Leader">Team Leader</option>
+                                <option value="HQ">HQ</option>
+                            </select>
+                        </label>
+
+                        <label>
+                            <span>Account Status</span>
+
+                            <select name="status">
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                                <option value="suspended">Suspended</option>
+                                <option value="retired">Retired</option>
+                            </select>
+                        </label>
+
+                        <label>
+                            <span>Administrator</span>
+
+                            <select name="admin">
+                                <option value="false">No</option>
+                                <option value="true">Yes</option>
+                            </select>
+                        </label>
+
+                        <label>
+                            <span>Cadre</span>
+
+                            <select name="cadre">
+                                <option value="false">No</option>
+                                <option value="true">Yes</option>
+                            </select>
+                        </label>
+
+                        <label>
+                            <span>Unit Joined</span>
+
+                            <input
+                                name="unit_joined_at"
+                                type="date"
+                                required
+                            >
+                        </label>
+
+                    </div>
+
+                </div>
 
                 <div
-                    id="message"
-                    class="form-message error form-full"
+                    id="create-account-message"
+                    class="form-message error"
                 ></div>
 
             </div>
@@ -249,15 +327,18 @@
                 <div class="modal-actions-right">
 
                     <button
-                        type="button"
+                        id="create-account-cancel"
                         class="secondary-button"
-                        id="cancel"
+                        type="button"
                     >
                         Cancel
                     </button>
 
-                    <button class="primary-button">
-                        Save Changes
+                    <button
+                        class="primary-button"
+                        type="submit"
+                    >
+                        Create Account
                     </button>
 
                 </div>
@@ -270,10 +351,177 @@
 
 </dialog>
 
-<script
-    type="module"
-    src="../../assets/js/portal/admin.js"
-></script>
+    <dialog id="edit" class="modal">
+
+        <form id="edit-form">
+
+            <div class="modal-frame">
+
+                <div class="modal-head">
+
+                    <div>
+                        <p class="eyebrow">Personnel Administration</p>
+                        <h2>Edit Personnel Record</h2>
+                    </div>
+
+                </div>
+
+                <div class="modal-body form-grid admin-grid">
+
+                    <label>
+                        <span>First name</span>
+                        <input name="first" readonly>
+                    </label>
+
+                    <label>
+                        <span>Last name</span>
+                        <input name="last" readonly>
+                    </label>
+
+                    <label class="form-full">
+                        <span>Email</span>
+                        <input name="email" readonly>
+                    </label>
+
+                    <label>
+                        <span>Callsign / ORBAT Position</span>
+
+                        <select name="callsign">
+                            <option value="">Unassigned</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        <span>Branch</span>
+
+                        <select name="branch">
+                            <option value="">Unassigned</option>
+                            <option value="Navy">Navy</option>
+                            <option value="Army">Army</option>
+                            <option value="Air Force">Air Force</option>
+                        </select>
+                    </label>
+
+                    <label id="rank-field">
+                        <span id="rank-label">Rank</span>
+
+                        <select name="rank">
+                            <option value="">Unassigned</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        <span>Team</span>
+
+                        <select name="team" disabled>
+                            <option value="">Unassigned</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        <span>Billet</span>
+
+                        <select name="billet" disabled>
+                            <option value="">Unassigned</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        <span>Squadron</span>
+
+                        <select name="squadron" disabled>
+                            <option value="">Unassigned</option>
+                            <option value="Red Squadron">Red Squadron</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        <span>Troop</span>
+
+                        <select name="troop" disabled>
+                            <option value="">Unassigned</option>
+                            <option value="3 Troop">3 Troop</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        <span>Leadership</span>
+
+                        <select name="leadership">
+                            <option value="Member">Member</option>
+                            <option value="Team Leader">Team Leader</option>
+                            <option value="HQ">HQ</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        <span>Account Status</span>
+
+                        <select name="status">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="suspended">Suspended</option>
+                            <option value="retired">Retired</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        <span>Administrator</span>
+
+                        <select name="admin">
+                            <option value="false">No</option>
+                            <option value="true">Yes</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        <span>Cadre</span>
+
+                        <select name="cadre">
+                            <option value="false">No</option>
+                            <option value="true">Yes</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        <span>Candidate</span>
+
+                        <select name="candidate">
+                            <option value="false">No</option>
+                            <option value="true">Yes</option>
+                        </select>
+                    </label>
+
+                    <div id="message" class="form-message error form-full"></div>
+
+                </div>
+
+                <div class="modal-actions">
+
+                    <div></div>
+
+                    <div class="modal-actions-right">
+
+                        <button type="button" class="secondary-button" id="cancel">
+                            Cancel
+                        </button>
+
+                        <button class="primary-button">
+                            Save Changes
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </dialog>
+
+    <script type="module" src="../../assets/js/portal/admin.js"></script>
 
 </body>
+
 </html>
