@@ -1,4 +1,4 @@
-import { supabase, requireSession, esc } from '../_shared/portal-shell.js';
+import { supabase, requireSession, esc } from '../shared/portal-shell.js';
 await requireSession();
 const { data, error } = await supabase.rpc('get_orbat');
 const status=document.getElementById('status'),root=document.getElementById('orbat');

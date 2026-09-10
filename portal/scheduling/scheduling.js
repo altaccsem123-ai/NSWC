@@ -1,4 +1,4 @@
-import { supabase, requireSession, displayName, formatDateTime, esc } from '../_shared/portal-shell.js';
+import { supabase, requireSession, displayName, formatDateTime, esc } from '../shared/portal-shell.js';
 const {account}=await requireSession();const candidate=account.is_candidate||String(account.email).toLowerCase().endsWith('@candidate.mil');const {data:isInstructor}=await supabase.rpc('portal_is_instructor',{p_user:account.id});let sessions=[],responses=[],people=[],tentativeSession=null,current=null;
 const tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'Local';document.getElementById('tz').textContent=tz;
 if(!candidate)document.getElementById('new-session').hidden=false;

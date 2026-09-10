@@ -1,4 +1,4 @@
-import { supabase, requireSession, esc } from '../_shared/portal-shell.js';
+import { supabase, requireSession, esc } from '../shared/portal-shell.js';
 await requireSession({admin:true});
 let people=[],slots=[],current=null; const rows=document.getElementById('rows'),search=document.getElementById('search'),dlg=document.getElementById('edit'),form=document.getElementById('edit-form');
 async function load(){const [a,s]=await Promise.all([supabase.rpc('get_admin_accounts'),supabase.from('orbat_slots').select('callsign,default_role').eq('active',true).order('sort_order')]);if(a.error)throw a.error;if(s.error)throw s.error;people=a.data||[];slots=s.data||[];render()}

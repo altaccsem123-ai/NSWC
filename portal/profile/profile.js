@@ -1,4 +1,4 @@
-import { supabase, requireSession, displayName, rankFor, formatDate, esc } from '../_shared/portal-shell.js';
+import { supabase, requireSession, displayName, rankFor, formatDate, esc } from '../shared/portal-shell.js';
 const {session,account}=await requireSession();
 const fields=[['Name',displayName(account)],['Email',account.email],['Callsign',account.callsign||'Unassigned'],['Branch',account.branch||'Unassigned'],['Rank',rankFor(account)],['Billet',account.billet||'Unassigned'],['Team',account.team||'Unassigned'],['Squadron',account.squadron||'Unassigned'],['Troop',account.troop||'Unassigned'],['Leadership',account.leadership_level||'Member'],['Unit joined',formatDate(account.unit_joined_at)],['Account status',account.account_status]];
 document.getElementById('record').innerHTML=fields.map(([k,v])=>`<tr><th>${esc(k)}</th><td>${esc(v)}</td></tr>`).join('');

@@ -1,4 +1,4 @@
-import { supabase, requireSession, displayName, formatDate, esc } from '../_shared/portal-shell.js';
+import { supabase, requireSession, displayName, formatDate, esc } from '../shared/portal-shell.js';
 const { account }=await requireSession();let requests=[],people=[],reviewer=false,current=null;
 const mine=document.getElementById('mine'),review=document.getElementById('review');
 const {data:canReview}=await supabase.rpc('portal_can_review_loa',{p_user:account.id});reviewer=!!canReview;document.getElementById('review-panel').hidden=!reviewer;
