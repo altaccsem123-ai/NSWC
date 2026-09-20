@@ -512,7 +512,7 @@ if (deApplicationForm) {
                   `**Fictional Name:** ${discordText(data.fictional_name)}\n` +
                   `**Discord:** ${discordText(data.discord_username)}\n` +
                   `**Age:** ${discordText(data.age)}\n` +
-                  `**Country / Region:** ${discordText(data.country)}\n` +
+                  `**Country / Region:** ${discordText(data.country)}`
               },
 
               {
