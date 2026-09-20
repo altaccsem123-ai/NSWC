@@ -390,7 +390,7 @@ if (deApplicationForm) {
   // A webhook stored in frontend JavaScript is publicly visible.
   const APPLICATION_WEBHOOK =
     'https://discord.com/api/webhooks/1551096238345031761/xx25Rnaw_LteS8-xtC3z-nv7IidY_R_8X15q2ajUDeVEKp5jlbZXBznDOXkC2UFoJ7ud';
-  }
+  
 
 
   // --------------------------------------------
