@@ -1645,3 +1645,16 @@ body > footer .container {
     min-width: 0;
   }
 }
+
+#de-application-form .field-note {
+  display: block;
+  margin-top: 7px;
+
+  color: rgba(0, 23, 45, 0.58);
+
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1.45;
+
+  text-align: left;
+}
