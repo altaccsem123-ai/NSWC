@@ -1129,100 +1129,507 @@ body > footer .container {
   .nav-login { position: sticky; right: 0; flex: 0 0 auto; background: #fff; }
 }
 
-/* ============================================
+/* =========================================================
    D&E APPLICATION
-   ============================================ */
+   ========================================================= */
+
+.nswg-application {
+  padding: 72px 0 90px;
+}
+
+.nswg-application .container {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.nswg-application .section-title {
+  margin-bottom: 12px;
+}
 
 .application-intro {
-  max-width: 780px;
-  margin: 0 0 32px;
+  max-width: 760px;
+  margin: 0 0 42px;
   line-height: 1.7;
-  opacity: 0.78;
+  opacity: 0.72;
 }
 
-.application-group {
-  margin-bottom: 34px;
-  padding-bottom: 30px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+
+/* =========================================================
+   MAIN FORM
+   ========================================================= */
+
+#de-application-form {
+  width: 100%;
+  padding: 38px 42px 42px;
+
+  background: #fff;
+
+  border-top: 3px solid #002b50;
+  border-left: 1px solid rgba(0, 43, 80, 0.18);
+  border-right: 1px solid rgba(0, 43, 80, 0.18);
+  border-bottom: 1px solid rgba(0, 43, 80, 0.18);
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1fr);
+
+  column-gap: 48px;
+  row-gap: 46px;
+
+  box-sizing: border-box;
 }
 
-.application-group:last-of-type {
-  border-bottom: 0;
+
+/* =========================================================
+   APPLICATION SECTIONS
+   ========================================================= */
+
+#de-application-form .application-group {
+  margin: 0;
+  padding: 0;
+
+  border: 0;
+
+  min-width: 0;
 }
 
-.application-group h3 {
-  margin: 0 0 20px;
-  font-size: 13px;
+
+/*
+   Layout:
+
+   Personal Info       Availability
+   Arma Background     D&E Candidacy
+   Confirmation        Confirmation
+*/
+
+#de-application-form .application-group:nth-of-type(1) {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+#de-application-form .application-group:nth-of-type(2) {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+#de-application-form .application-group:nth-of-type(3) {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+#de-application-form .application-group:nth-of-type(4) {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+#de-application-form .application-group:nth-of-type(5) {
+  grid-column: 1 / -1;
+  grid-row: 3;
+
+  padding-top: 30px;
+
+  border-top:
+    1px solid rgba(0, 43, 80, 0.14);
+}
+
+
+/* =========================================================
+   SECTION HEADINGS
+   ========================================================= */
+
+#de-application-form .application-group > h3 {
+  margin: 0 0 25px;
+  padding: 0;
+
+  color: #001d38;
+
+  font-size: 14px;
   font-weight: 700;
+
+  line-height: 1.2;
+
   letter-spacing: 0.12em;
   text-transform: uppercase;
+
+  text-align: left;
 }
 
-.application-grid {
+
+/* =========================================================
+   FIELD GRIDS
+   ========================================================= */
+
+#de-application-form .application-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 22px 20px;
+
+  width: 100%;
 }
 
-.form-field {
+
+/* =========================================================
+   INDIVIDUAL FIELDS
+   ========================================================= */
+
+#de-application-form .form-field {
   display: flex;
   flex-direction: column;
+
+  width: 100%;
+  min-width: 0;
+
+  margin: 0;
+  padding: 0;
 }
 
-.form-field.full {
+#de-application-form .form-field.full {
   grid-column: 1 / -1;
 }
 
-.form-field label {
-  margin-bottom: 8px;
+
+/* =========================================================
+   LABELS
+   ========================================================= */
+
+#de-application-form .form-field > label {
+  display: block;
+
+  width: 100%;
+
+  margin: 0 0 8px;
+  padding: 0;
+
+  color: #00172d;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  line-height: 1.35;
+
+  text-align: left;
+
+  letter-spacing: 0;
+  text-transform: none;
 }
 
-.application-check {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  margin: 12px 0;
-  cursor: pointer;
-  line-height: 1.5;
-}
 
-.application-check input {
-  width: auto;
-  margin-top: 4px;
-  flex: 0 0 auto;
-}
+/* =========================================================
+   INPUTS / SELECTS / TEXTAREAS
+   ========================================================= */
 
-.application-status {
-  display: none;
-  margin: 0 0 18px;
-  padding: 13px 15px;
+#de-application-form input[type="text"],
+#de-application-form input[type="number"],
+#de-application-form input[type="email"],
+#de-application-form select,
+#de-application-form textarea {
+  display: block;
+
+  width: 100%;
+  max-width: none;
+
+  margin: 0;
+
+  box-sizing: border-box;
+
+  border:
+    1px solid rgba(0, 43, 80, 0.28);
+
+  border-radius: 0;
+
+  background: #fff;
+
+  color: #00172d;
+
+  font: inherit;
+
   font-size: 13px;
+
+  outline: none;
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+
+/* Inputs */
+
+#de-application-form input[type="text"],
+#de-application-form input[type="number"],
+#de-application-form input[type="email"],
+#de-application-form select {
+  height: 44px;
+
+  padding: 0 12px;
+}
+
+
+/* Select */
+
+#de-application-form select {
+  cursor: pointer;
+}
+
+
+/* Textareas */
+
+#de-application-form textarea {
+  min-height: 112px;
+
+  padding: 11px 12px;
+
+  line-height: 1.55;
+
+  resize: vertical;
+}
+
+
+/* Smaller schedule notes field */
+
+#de-application-form #schedule_notes {
+  min-height: 110px;
+}
+
+
+/* =========================================================
+   PLACEHOLDERS
+   ========================================================= */
+
+#de-application-form input::placeholder,
+#de-application-form textarea::placeholder {
+  color: rgba(0, 23, 45, 0.52);
+  opacity: 1;
+}
+
+
+/* =========================================================
+   FOCUS
+   ========================================================= */
+
+#de-application-form input:focus,
+#de-application-form select:focus,
+#de-application-form textarea:focus {
+  border-color: #003a67;
+
+  box-shadow:
+    0 0 0 2px rgba(0, 58, 103, 0.08);
+}
+
+
+/* =========================================================
+   READONLY TIMEZONE
+   ========================================================= */
+
+#de-application-form input[readonly] {
+  background: #f4f6f8;
+
+  color: #33475a;
+
+  cursor: default;
+}
+
+
+/* =========================================================
+   CONFIRMATION
+   ========================================================= */
+
+#de-application-form .application-group:nth-of-type(5) > h3 {
+  margin-bottom: 20px;
+}
+
+#de-application-form .application-check {
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 11px;
+
+  width: 100%;
+
+  margin: 0 0 12px;
+  padding: 0;
+
+  color: #00172d;
+
+  font-size: 12px;
+
+  line-height: 1.5;
+
+  text-align: left;
+
+  cursor: pointer;
+}
+
+#de-application-form .application-check:last-child {
+  margin-bottom: 0;
+}
+
+#de-application-form .application-check input[type="checkbox"] {
+  flex: 0 0 auto;
+
+  width: 15px;
+  height: 15px;
+
+  margin: 2px 0 0;
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+#de-application-form .application-status {
+  grid-column: 1 / -1;
+
+  display: none;
+
+  width: 100%;
+
+  margin: -12px 0 0;
+  padding: 13px 15px;
+
+  box-sizing: border-box;
+
+  font-size: 12px;
   line-height: 1.5;
 }
 
-.application-status.success {
+#de-application-form .application-status.success {
   display: block;
-  border: 1px solid rgba(77, 166, 105, 0.45);
-  background: rgba(77, 166, 105, 0.10);
+
+  border:
+    1px solid rgba(55, 125, 76, 0.35);
+
+  background:
+    rgba(55, 125, 76, 0.08);
+
+  color: #245c36;
 }
 
-.application-status.error {
+#de-application-form .application-status.error {
   display: block;
-  border: 1px solid rgba(190, 70, 70, 0.45);
-  background: rgba(190, 70, 70, 0.10);
+
+  border:
+    1px solid rgba(160, 55, 55, 0.35);
+
+  background:
+    rgba(160, 55, 55, 0.08);
+
+  color: #7b2929;
 }
 
-.form-submit:disabled {
-  opacity: 0.55;
+
+/* =========================================================
+   SUBMIT BUTTON
+   ========================================================= */
+
+#de-application-form .form-submit {
+  grid-column: 1 / -1;
+
+  justify-self: start;
+
+  min-width: 230px;
+
+  height: 46px;
+
+  margin: -10px 0 0;
+  padding: 0 24px;
+
+  border: 1px solid #002b50;
+  border-radius: 0;
+
+  background: #002b50;
+
+  color: #fff;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  letter-spacing: 0.1em;
+
+  text-transform: uppercase;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+#de-application-form .form-submit:hover {
+  background: #fff;
+  color: #002b50;
+}
+
+#de-application-form .form-submit:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
-@media (max-width: 720px) {
-  .application-grid {
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  #de-application-form {
+    padding: 32px;
+
     grid-template-columns: 1fr;
+
+    gap: 38px;
   }
 
-  .form-field.full {
-    grid-column: auto;
+  #de-application-form .application-group:nth-of-type(1),
+  #de-application-form .application-group:nth-of-type(2),
+  #de-application-form .application-group:nth-of-type(3),
+  #de-application-form .application-group:nth-of-type(4),
+  #de-application-form .application-group:nth-of-type(5) {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  #de-application-form .application-group:nth-of-type(5) {
+    padding-top: 28px;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  .nswg-application {
+    padding: 50px 0 65px;
+  }
+
+  #de-application-form {
+    padding: 25px 20px;
+
+    gap: 34px;
+  }
+
+  #de-application-form .application-grid {
+    grid-template-columns: 1fr;
+
+    gap: 18px;
+  }
+
+  #de-application-form .form-field.full {
+    grid-column: 1;
+  }
+
+  #de-application-form .form-submit {
+    width: 100%;
+    min-width: 0;
   }
 }
