@@ -279,7 +279,6 @@ body > header .subhead {
   transform: scaleX(1);
 }
 
-/* Hero */
 .nswg-hero {
   position: relative;
   min-height: clamp(360px, 52vw, 620px);
@@ -287,14 +286,59 @@ body > header .subhead {
   place-items: end start;
   overflow: hidden;
   isolation: isolate;
-  background:
-    linear-gradient(90deg, rgba(0,18,37,0.84) 0%, rgba(0,18,37,0.56) 43%, rgba(0,18,37,0.08) 78%),
-    linear-gradient(0deg, rgba(0,18,37,0.58), rgba(0,18,37,0.02) 55%),
-    url("../../images/site-emblem.png") center 44% / cover no-repeat;
+  background: #001225;
 }
 
-.nswg-hero > img {
-  display: none;
+/* Container holding every hero image */
+.hero-slides {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* Individual images */
+.hero-slide {
+  position: absolute;
+  inset: 0;
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  opacity: 0;
+  transform: scale(1.015);
+
+  transition:
+    opacity 1.4s ease-in-out,
+    transform 7s ease-out;
+}
+
+/* Currently visible image */
+.hero-slide.active {
+  opacity: 1;
+  transform: scale(1.045);
+}
+
+/* Existing dark/navy cinematic shading */
+.hero-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0, 18, 37, 0.84) 0%,
+      rgba(0, 18, 37, 0.56) 43%,
+      rgba(0, 18, 37, 0.08) 78%
+    ),
+    linear-gradient(
+      0deg,
+      rgba(0, 18, 37, 0.58) 0%,
+      rgba(0, 18, 37, 0.02) 55%
+    );
 }
 
 .hero-overlay {
@@ -307,7 +351,7 @@ body > header .subhead {
 }
 
 .hero-overlay::before {
-  content: "NSWC // 2012";
+  content: "NSWC // 2010";
   display: block;
   margin-bottom: 12px;
   color: rgba(255,255,255,0.72);
