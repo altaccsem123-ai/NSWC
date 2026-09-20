@@ -578,3 +578,345 @@ else if (lowerSlides.length > 1) {
 
   }, 6500);
 }
+
+// ============================================
+// D&E APPLICATION SUBMISSION
+// ============================================
+
+const deApplicationForm =
+  document.getElementById('de-application-form');
+
+if (deApplicationForm) {
+
+  const applicationStatus =
+    document.getElementById('application-status');
+
+  const applicationSubmit =
+    document.getElementById('application-submit');
+
+  const timezoneInput =
+    document.getElementById('timezone');
+
+  // IMPORTANT:
+  // A webhook stored in frontend JavaScript is publicly visible.
+  const APPLICATION_WEBHOOK =
+    'https://discord.com/api/webhooks/1551096238345031761/xx25Rnaw_LteS8-xtC3z-nv7IidY_R_8X15q2ajUDeVEKp5jlbZXBznDOXkC2UFoJ7ud';
+
+
+  // --------------------------------------------
+  // AUTOMATIC TIMEZONE
+  // --------------------------------------------
+
+  if (timezoneInput) {
+    try {
+      timezoneInput.value =
+        Intl.DateTimeFormat()
+          .resolvedOptions()
+          .timeZone || 'Unknown';
+    } catch (error) {
+      timezoneInput.value = 'Unknown';
+    }
+  }
+
+
+  // --------------------------------------------
+  // STATUS MESSAGE
+  // --------------------------------------------
+
+  function setApplicationStatus(message, type) {
+
+    if (!applicationStatus) return;
+
+    applicationStatus.textContent = message;
+
+    applicationStatus.classList.remove(
+      'success',
+      'error'
+    );
+
+    applicationStatus.classList.add(type);
+
+    applicationStatus.style.display = 'block';
+  }
+
+
+  // --------------------------------------------
+  // SAFE DISCORD TEXT
+  // --------------------------------------------
+
+  function discordText(value, fallback = 'Not provided') {
+
+    if (!value) {
+      return fallback;
+    }
+
+    return String(value)
+      .trim()
+      .replace(/@/g, '@\u200B')
+      .slice(0, 1000);
+  }
+
+
+  // --------------------------------------------
+  // SUBMISSION
+  // --------------------------------------------
+
+  deApplicationForm.addEventListener(
+    'submit',
+    async event => {
+
+      event.preventDefault();
+
+
+      // Native HTML validation
+      if (!deApplicationForm.checkValidity()) {
+        deApplicationForm.reportValidity();
+        return;
+      }
+
+
+      const formData =
+        new FormData(deApplicationForm);
+
+      const data =
+        Object.fromEntries(formData.entries());
+
+
+      // ----------------------------------------
+      // AGE CHECK
+      // ----------------------------------------
+
+      const age = Number(data.age);
+
+      if (!Number.isInteger(age) || age < 18) {
+
+        setApplicationStatus(
+          'Applicants must be at least 18 years old.',
+          'error'
+        );
+
+        return;
+      }
+
+
+      // ----------------------------------------
+      // PREVENT ACCIDENTAL DOUBLE SUBMISSION
+      // ----------------------------------------
+
+      applicationSubmit.disabled = true;
+      applicationSubmit.textContent =
+        'Submitting Application...';
+
+
+      // ----------------------------------------
+      // DISCORD EMBED
+      // ----------------------------------------
+
+      const payload = {
+
+        username: 'NSWC Recruitment',
+
+        allowed_mentions: {
+          parse: []
+        },
+
+        embeds: [
+          {
+            title: 'D&E Operator Application',
+
+            description:
+              'A new candidate application has been submitted through the NSWC website.',
+
+            color: 0x0B2740,
+
+            fields: [
+
+              {
+                name: 'PERSONAL INFORMATION',
+                value:
+                  `**Nickname:** ${discordText(data.nickname)}\n` +
+                  `**Fictional Name:** ${discordText(data.fictional_name)}\n` +
+                  `**Discord:** ${discordText(data.discord_username)}\n` +
+                  `**Age:** ${discordText(data.age)}\n` +
+                  `**Country / Region:** ${discordText(data.country)}\n` +
+                  `**Timezone:** ${discordText(data.timezone)}`
+              },
+
+              {
+                name: 'AVAILABILITY',
+                value:
+                  `**Weekly Availability:** ${discordText(data.weekly_availability)}\n` +
+                  `**Weekend Availability:** ${discordText(data.weekend_availability)}\n\n` +
+                  `**Schedule Notes:**\n${discordText(data.schedule_notes, 'None provided')}`
+              },
+
+              {
+                name: 'ARMA 3 BACKGROUND',
+                value:
+                  `**Arma 3 Hours:** ${discordText(data.arma_hours)}\n` +
+                  `**ACRE2 Experience:** ${discordText(data.acre_experience)}`
+              },
+
+              {
+                name: 'PREVIOUS UNITS',
+                value:
+                  discordText(
+                    data.previous_units,
+                    'None'
+                  )
+              },
+
+              {
+                name: 'PREVIOUS ROLES / EXPERIENCE',
+                value:
+                  discordText(
+                    data.previous_roles,
+                    'None'
+                  )
+              },
+
+              {
+                name: 'WHY NSWC?',
+                value:
+                  discordText(data.why_join)
+              },
+
+              {
+                name: 'TEAM ENVIRONMENT',
+                value:
+                  discordText(data.teamplay)
+              },
+
+              {
+                name: 'TRAINING & SOPs',
+                value:
+                  discordText(data.training_attitude)
+              },
+
+              {
+                name: 'EXPECTATIONS',
+                value:
+                  discordText(data.expectations)
+              },
+
+              {
+                name: 'ADDITIONAL INFORMATION',
+                value:
+                  discordText(
+                    data.additional_information,
+                    'None provided'
+                  )
+              },
+
+              {
+                name: 'CONFIRMATIONS',
+                value:
+                  '✓ 18+ confirmed\n' +
+                  '✓ Attendance expectations acknowledged\n' +
+                  '✓ Conduct and feedback expectations acknowledged'
+              }
+
+            ],
+
+            footer: {
+              text:
+                'Naval Special Warfare Command • D&E Recruitment'
+            },
+
+            timestamp:
+              new Date().toISOString()
+          }
+        ]
+      };
+
+
+      // ----------------------------------------
+      // SEND TO DISCORD
+      // ----------------------------------------
+
+      try {
+
+        const response = await fetch(
+          APPLICATION_WEBHOOK,
+          {
+            method: 'POST',
+
+            headers: {
+              'Content-Type': 'application/json'
+            },
+
+            body: JSON.stringify(payload)
+          }
+        );
+
+
+        if (!response.ok) {
+
+          let responseText = '';
+
+          try {
+            responseText = await response.text();
+          } catch (error) {
+            responseText = '';
+          }
+
+          console.error(
+            'Discord webhook rejected application:',
+            response.status,
+            responseText
+          );
+
+          throw new Error(
+            `Discord returned HTTP ${response.status}`
+          );
+        }
+
+
+        // ----------------------------------------
+        // SUCCESS
+        // ----------------------------------------
+
+        setApplicationStatus(
+          'Application submitted successfully. Recruitment staff will review your submission.',
+          'success'
+        );
+
+
+        deApplicationForm.reset();
+
+
+        // Reset timezone after form.reset()
+        if (timezoneInput) {
+          try {
+            timezoneInput.value =
+              Intl.DateTimeFormat()
+                .resolvedOptions()
+                .timeZone || 'Unknown';
+          } catch (error) {
+            timezoneInput.value = 'Unknown';
+          }
+        }
+
+
+      } catch (error) {
+
+        console.error(
+          'Application submission failed:',
+          error
+        );
+
+        setApplicationStatus(
+          'The application could not be submitted. Please try again or contact recruitment staff.',
+          'error'
+        );
+
+      } finally {
+
+        applicationSubmit.disabled = false;
+
+        applicationSubmit.textContent =
+          'Submit D&E Application';
+      }
+    }
+  );
+}

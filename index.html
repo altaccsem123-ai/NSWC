@@ -308,41 +308,433 @@
 
 
 
-    <!-- ============================ -->
-    <!-- APPLICATION FORM             -->
-    <!-- ============================ -->
-    <section id="application" class="nswg-application nswg-fade">
-        <div class="container">
-            <h2 class="section-title">Application for Assignment</h2>
+<!-- ============================ -->
+<!-- D&E APPLICATION              -->
+<!-- ============================ -->
+<section id="application" class="nswg-application nswg-fade">
+    <div class="container">
 
-            <form class="nswg-form">
-                <label>Full Name</label>
-                <input type="text" required>
+        <h2 class="section-title">D&E Operator Application</h2>
 
-                <label>Age</label>
-                <input type="number" required>
+        <p class="application-intro">
+            Applications are currently open for D&E Operator candidates.
+            Complete the form below accurately. Prior milsim experience is useful,
+            but attitude, availability, maturity, and willingness to learn are equally important.
+        </p>
 
-                <label>Discord Username</label>
-                <input type="text" required>
+        <form
+            id="de-application-form"
+            class="nswg-form"
+            data-application-form
+        >
 
-                <label>Preferred Billet</label>
-                <select>
-                    <option>SEAL Operator</option>
-                    <option>Intel Officer</option>
-                    <option>HUMINT</option>
-                    <option>MH-6 Pilot</option>
-                    <option>MH-60 Pilot</option>
-                    <option>MH-47 Pilot</option>
-                </select>
+            <!-- PERSONAL INFORMATION -->
+            <div class="application-group">
+                <h3>Personal Information</h3>
 
-                <label>Relevant Experience or Background</label>
-                <textarea rows="4"></textarea>
+                <div class="application-grid">
 
-                <button type="submit" class="form-submit">Submit Application</button>
-            </form>
-        </div>
-    </section>
+                    <div class="form-field">
+                        <label for="nickname">Nickname / Preferred Name</label>
+                        <input
+                            id="nickname"
+                            name="nickname"
+                            type="text"
+                            maxlength="40"
+                            placeholder="What should we call you?"
+                            required
+                        >
+                    </div>
 
+                    <div class="form-field">
+                        <label for="fictional_name">Full Fictional Name</label>
+                        <input
+                            id="fictional_name"
+                            name="fictional_name"
+                            type="text"
+                            maxlength="80"
+                            placeholder="First and last name used in-unit"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-field">
+                        <label for="discord_username">Discord Username</label>
+                        <input
+                            id="discord_username"
+                            name="discord_username"
+                            type="text"
+                            maxlength="80"
+                            placeholder="Your Discord username"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-field">
+                        <label for="age">Age</label>
+                        <input
+                            id="age"
+                            name="age"
+                            type="number"
+                            min="18"
+                            max="99"
+                            placeholder="18+"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-field">
+                        <label for="country">Country / Region</label>
+                        <input
+                            id="country"
+                            name="country"
+                            type="text"
+                            maxlength="80"
+                            placeholder="Netherlands, United Kingdom, etc."
+                            required
+                        >
+                    </div>
+
+                    <div class="form-field">
+                        <label for="timezone">Timezone</label>
+                        <input
+                            id="timezone"
+                            name="timezone"
+                            type="text"
+                            maxlength="80"
+                            placeholder="Automatically detected"
+                            readonly
+                        >
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!-- AVAILABILITY -->
+            <div class="application-group">
+                <h3>Availability & Commitment</h3>
+
+                <div class="application-grid">
+
+                    <div class="form-field">
+                        <label for="weekly_availability">
+                            General Weekly Availability
+                        </label>
+
+                        <select
+                            id="weekly_availability"
+                            name="weekly_availability"
+                            required
+                        >
+                            <option value="" selected disabled>
+                                Select availability
+                            </option>
+
+                            <option value="3+ evenings per week">
+                                3+ evenings per week
+                            </option>
+
+                            <option value="2 evenings per week">
+                                2 evenings per week
+                            </option>
+
+                            <option value="1 evening per week">
+                                1 evening per week
+                            </option>
+
+                            <option value="Varies week to week">
+                                Varies week to week
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="weekend_availability">
+                            Weekend Availability
+                        </label>
+
+                        <select
+                            id="weekend_availability"
+                            name="weekend_availability"
+                            required
+                        >
+                            <option value="" selected disabled>
+                                Select availability
+                            </option>
+
+                            <option value="Usually available">
+                                Usually available
+                            </option>
+
+                            <option value="Available most weekends">
+                                Available most weekends
+                            </option>
+
+                            <option value="Occasionally available">
+                                Occasionally available
+                            </option>
+
+                            <option value="Rarely available">
+                                Rarely available
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-field full">
+                        <label for="schedule_notes">
+                            Schedule Notes
+                        </label>
+
+                        <textarea
+                            id="schedule_notes"
+                            name="schedule_notes"
+                            rows="3"
+                            maxlength="500"
+                            placeholder="Work schedules, school, rotating shifts, or anything else that regularly affects your availability."
+                        ></textarea>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!-- ARMA / MILSIM BACKGROUND -->
+            <div class="application-group">
+                <h3>Arma & Milsim Background</h3>
+
+                <div class="application-grid">
+
+                    <div class="form-field">
+                        <label for="arma_hours">
+                            Approximate Arma 3 Hours
+                        </label>
+
+                        <input
+                            id="arma_hours"
+                            name="arma_hours"
+                            type="number"
+                            min="0"
+                            max="50000"
+                            placeholder="Example: 1200"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-field">
+                        <label for="acre_experience">
+                            ACRE2 Experience
+                        </label>
+
+                        <select
+                            id="acre_experience"
+                            name="acre_experience"
+                            required
+                        >
+                            <option value="" selected disabled>
+                                Select experience
+                            </option>
+
+                            <option value="Experienced">
+                                Experienced
+                            </option>
+
+                            <option value="Some experience">
+                                Some experience
+                            </option>
+
+                            <option value="Little experience">
+                                Little experience
+                            </option>
+
+                            <option value="No experience">
+                                No experience
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-field full">
+                        <label for="previous_units">
+                            Previous Arma 3 Units
+                        </label>
+
+                        <textarea
+                            id="previous_units"
+                            name="previous_units"
+                            rows="4"
+                            maxlength="1000"
+                            placeholder="List previous units, your roles, and roughly how long you were with them. Write 'None' if this would be your first unit."
+                            required
+                        ></textarea>
+                    </div>
+
+                    <div class="form-field full">
+                        <label for="previous_roles">
+                            Previous Roles / Experience
+                        </label>
+
+                        <textarea
+                            id="previous_roles"
+                            name="previous_roles"
+                            rows="4"
+                            maxlength="1000"
+                            placeholder="Assaulter, breacher, medic, JTAC, leadership, reconnaissance, communications, mission planning, etc."
+                            required
+                        ></textarea>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!-- D&E CANDIDACY -->
+            <div class="application-group">
+                <h3>D&E Candidacy</h3>
+
+                <div class="application-grid">
+
+                    <div class="form-field full">
+                        <label for="why_join">
+                            Why do you want to join this unit?
+                        </label>
+
+                        <textarea
+                            id="why_join"
+                            name="why_join"
+                            rows="5"
+                            minlength="50"
+                            maxlength="1500"
+                            placeholder="Tell us what interests you about the unit and what you're looking for from it."
+                            required
+                        ></textarea>
+                    </div>
+
+                    <div class="form-field full">
+                        <label for="teamplay">
+                            How would you describe yourself in a team environment?
+                        </label>
+
+                        <textarea
+                            id="teamplay"
+                            name="teamplay"
+                            rows="4"
+                            minlength="30"
+                            maxlength="1000"
+                            placeholder="Communication, taking feedback, following direction, helping others, leadership when required, etc."
+                            required
+                        ></textarea>
+                    </div>
+
+                    <div class="form-field full">
+                        <label for="training_attitude">
+                            What is your approach to training and learning new SOPs?
+                        </label>
+
+                        <textarea
+                            id="training_attitude"
+                            name="training_attitude"
+                            rows="4"
+                            minlength="30"
+                            maxlength="1000"
+                            placeholder="Briefly explain how you approach training, feedback, and unfamiliar procedures."
+                            required
+                        ></textarea>
+                    </div>
+
+                    <div class="form-field full">
+                        <label for="expectations">
+                            What are you expecting from the unit?
+                        </label>
+
+                        <textarea
+                            id="expectations"
+                            name="expectations"
+                            rows="4"
+                            minlength="30"
+                            maxlength="1000"
+                            placeholder="What kind of environment, gameplay, training, or community are you looking for?"
+                            required
+                        ></textarea>
+                    </div>
+
+                    <div class="form-field full">
+                        <label for="additional_information">
+                            Anything else we should know?
+                        </label>
+
+                        <textarea
+                            id="additional_information"
+                            name="additional_information"
+                            rows="3"
+                            maxlength="1000"
+                            placeholder="Optional."
+                        ></textarea>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!-- CONFIRMATIONS -->
+            <div class="application-group">
+                <h3>Confirmation</h3>
+
+                <label class="application-check">
+                    <input
+                        type="checkbox"
+                        name="age_confirmation"
+                        required
+                    >
+
+                    <span>
+                        I confirm that I am at least 18 years old.
+                    </span>
+                </label>
+
+                <label class="application-check">
+                    <input
+                        type="checkbox"
+                        name="attendance_confirmation"
+                        required
+                    >
+
+                    <span>
+                        I understand that regular participation in training and operations is expected.
+                    </span>
+                </label>
+
+                <label class="application-check">
+                    <input
+                        type="checkbox"
+                        name="conduct_confirmation"
+                        required
+                    >
+
+                    <span>
+                        I understand that maturity, communication, and the ability to accept feedback are expected.
+                    </span>
+                </label>
+            </div>
+
+
+            <div
+                id="application-status"
+                class="application-status"
+                aria-live="polite"
+            ></div>
+
+            <button
+                id="application-submit"
+                type="submit"
+                class="form-submit"
+            >
+                Submit D&E Application
+            </button>
+
+        </form>
+
+    </div>
+</section>
 
 
 
